@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BooMap — UI Design System</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0B0B0F;
+    --bg2: #0F0F16;
+    --surface: rgba(255,255,255,0.05);
+    --surface2: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.12);
+    --blue-glow: #6B9FFF;
+    --purple-glow: #A78BFA;
+    --pink-glow: #F472B6;
+    --danger: rgba(180,60,80,0.6);
+    --text: rgba(255,255,255,0.92);
+    --text2: rgba(255,255,255,0.55);
+    --text3: rgba(255,255,255,0.3);
+    --accent: #8B9FFF;
+  }
+
+  body {
+    background: #0a0a10;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── Page header ── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .page-header h1 {
+    font-size: 48px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #8B9FFF 0%, #C084FC 50%, #F472B6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+  }
+  .page-header p {
+    color: var(--text2);
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Section labels ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 24px;
+    padding-left: 4px;
+  }
+
+  /* ── Phone frame ── */
+  .phones-row {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 80px;
+  }
+
+  .phone-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .phone-label {
+    font-size: 12px;
+    color: var(--text3);
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .phone {
+    width: 390px;
+    height: 844px;
+    background: var(--bg);
+    border-radius: 52px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.8),
+      0 40px 120px rgba(0,0,0,0.8),
+      0 0 60px rgba(107,159,255,0.05);
+    flex-shrink: 0;
+  }
+
+  /* notch */
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 34px;
+    background: #0B0B0F;
+    border-radius: 0 0 20px 20px;
+    z-index: 999;
+  }
+
+  /* status bar */
+  .status-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 54px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 28px 8px;
+    z-index: 100;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .status-bar .time { font-size: 15px; font-weight: 600; }
+  .status-icons { display: flex; gap: 6px; align-items: center; }
+
+  /* ─────────────────────────────────────────
+     SCREEN 1 — MAP
+  ───────────────────────────────────────── */
+  .screen-map {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #0B0B0F;
+    overflow: hidden;
+  }
+
+  /* dark map background */
+  .map-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 800px 600px at 60% 40%, rgba(50,40,80,0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 400px at 20% 70%, rgba(40,30,70,0.2) 0%, transparent 60%),
+      linear-gradient(180deg, #0B0B0F 0%, #0D0D16 100%);
+    overflow: hidden;
+  }
+
+  /* grid lines */
+  .map-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(107,159,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(107,159,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* roads */
+  .road {
+    position: absolute;
+    background: rgba(255,255,255,0.04);
+    border-radius: 2px;
+  }
+  .road-h { height: 2px; left: 0; right: 0; }
+  .road-v { width: 2px; top: 0; bottom: 0; }
+  .road-main { background: rgba(255,255,255,0.07); }
+
+  /* city light dots */
+  .city-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(150,150,200,0.3);
+  }
+
+  /* danger zone aura */
+  .danger-zone {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(180,60,80,0.18) 0%, rgba(120,40,60,0.08) 50%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ghost markers */
+  .ghost-marker {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .ghost-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--size, 22px);
+    filter: drop-shadow(0 0 6px var(--glow, rgba(139,159,255,0.6)));
+    opacity: var(--op, 0.75);
+    animation: ghostFloat var(--dur, 3s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes ghostFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-4px); }
+  }
+
+  /* user avatar */
+  .user-ghost {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .user-ghost-icon {
+    width: 44px; height: 44px;
+    background: radial-gradient(circle at 40% 35%, rgba(139,159,255,0.9), rgba(100,120,220,0.7));
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow: 0 0 20px rgba(139,159,255,0.6), 0 0 40px rgba(139,159,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    border: 1.5px solid rgba(139,159,255,0.5);
+    animation: ghostFloat 2.5s ease-in-out infinite;
+  }
+  .user-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #8B9FFF;
+    box-shadow: 0 0 8px rgba(139,159,255,0.8);
+  }
+
+  /* top bar */
+  .map-top-bar {
+    position: absolute;
+    top: 60px; left: 20px; right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 50;
+  }
+  .search-pill {
+    flex: 1;
+    height: 44px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 8px;
+    color: var(--text3);
+    font-size: 14px;
+  }
+  .icon-btn {
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  /* center FAB */
+  .map-fab {
+    position: absolute;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px; height: 64px;
+    background: radial-gradient(circle at 40% 35%, rgba(139,159,255,0.35), rgba(80,60,150,0.25));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(139,159,255,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow:
+      0 0 20px rgba(139,159,255,0.25),
+      0 0 60px rgba(139,159,255,0.12),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+    z-index: 50;
+    animation: fabPulse 3s ease-in-out infinite;
+  }
+  @keyframes fabPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(139,159,255,0.25), 0 0 60px rgba(139,159,255,0.12), inset 0 1px 0 rgba(255,255,255,0.15); }
+    50% { box-shadow: 0 0 30px rgba(139,159,255,0.4), 0 0 80px rgba(139,159,255,0.2), inset 0 1px 0 rgba(255,255,255,0.2); }
+  }
+
+  /* bottom nav */
+  .bottom-nav {
+    position: absolute;
+    bottom: 20px;
+    left: 20px; right: 20px;
+    height: 72px;
+    background: rgba(15,15,22,0.85);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 100;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    border-radius: 16px;
+    transition: all 0.2s;
+  }
+  .nav-item.active { background: rgba(139,159,255,0.12); }
+  .nav-icon { font-size: 20px; }
+  .nav-label { font-size: 10px; font-weight: 500; color: var(--text3); letter-spacing: 0.5px; }
+  .nav-item.active .nav-label { color: #8B9FFF; }
+  .nav-item.active .nav-icon { filter: drop-shadow(0 0 6px rgba(139,159,255,0.7)); }
+
+  /* ghost count badge */
+  .ghost-count {
+    position: absolute;
+    top: 118px; right: 20px;
+    background: rgba(15,15,22,0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 10px 14px;
+    z-index: 50;
+    text-align: center;
+  }
+  .ghost-count .num { font-size: 22px; font-weight: 700; color: #A78BFA; }
+  .ghost-count .lbl { font-size: 10px; color: var(--text3); letter-spacing: 0.5px; margin-top: 2px; }
+
+  /* ─────────────────────────────────────────
+     SCREEN 2 — DROP GHOST
+  ───────────────────────────────────────── */
+  .screen-drop {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: var(--bg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drop-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 500px 500px at 50% -100px, rgba(100,80,180,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 300px 400px at 80% 80%, rgba(167,139,250,0.08) 0%, transparent 60%);
+  }
+
+  .drop-handle {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    margin: 14px auto 0;
+    flex-shrink: 0;
+  }
+
+  .drop-header {
+    padding: 20px 28px 0;
+    flex-shrink: 0;
+  }
+  .drop-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .drop-header p { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+  .drop-ghost-preview {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0 16px;
+    flex-shrink: 0;
+  }
+  .drop-ghost-anim {
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at 40% 35%, rgba(167,139,250,0.4), rgba(100,80,180,0.2));
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 0 30px rgba(167,139,250,0.3), 0 0 60px rgba(167,139,250,0.15);
+    animation: ghostFloat 2.5s ease-in-out infinite;
+    border: 1px solid rgba(167,139,250,0.25);
+  }
+
+  .drop-content {
+    flex: 1;
+    padding: 0 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 20px;
+  }
+
+  .drop-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 2px;
+  }
+
+  /* ghost type selector */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .type-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 4px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    cursor: pointer;
+  }
+  .type-chip.selected {
+    background: rgba(139,159,255,0.12);
+    border-color: rgba(139,159,255,0.35);
+    box-shadow: 0 0 12px rgba(139,159,255,0.15);
+  }
+  .type-chip .icon { font-size: 22px; }
+  .type-chip .name { font-size: 9px; color: var(--text3); font-weight: 500; letter-spacing: 0.3px; }
+  .type-chip.selected .name { color: #8B9FFF; }
+
+  /* text input */
+  .text-input-area {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--text);
+    min-height: 80px;
+    line-height: 1.6;
+  }
+  .text-input-area .placeholder { color: var(--text3); }
+
+  /* severity slider */
+  .severity-track {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    position: relative;
+    margin: 8px 0 4px;
+  }
+  .severity-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 45%;
+    background: linear-gradient(90deg, rgba(139,159,255,0.5), rgba(180,60,80,0.6));
+    border-radius: 3px;
+  }
+  .severity-thumb {
+    position: absolute;
+    top: 50%; left: 45%;
+    transform: translate(-50%, -50%);
+    width: 20px; height: 20px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(139,159,255,0.5);
+  }
+  .severity-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text3);
+  }
+
+  /* anonymous toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+  }
+  .toggle-left { display: flex; align-items: center; gap: 10px; }
+  .toggle-left .icon { font-size: 18px; }
+  .toggle-info h4 { font-size: 13px; font-weight: 500; }
+  .toggle-info p { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .toggle-pill {
+    width: 44px; height: 26px;
+    background: rgba(139,159,255,0.3);
+    border-radius: 13px;
+    border: 1px solid rgba(139,159,255,0.4);
+    position: relative;
+  }
+  .toggle-pill::after {
+    content: '';
+    position: absolute;
+    top: 3px; right: 3px;
+    width: 18px; height: 18px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(139,159,255,0.4);
+  }
+
+  /* drop CTA */
+  .drop-cta {
+    height: 54px;
+    background: linear-gradient(135deg, rgba(100,80,180,0.5), rgba(139,100,220,0.4));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    box-shadow: 0 0 20px rgba(139,159,255,0.2), 0 0 40px rgba(139,159,255,0.1);
+    letter-spacing: 0.3px;
+  }
+
+  /* ─────────────────────────────────────────
+     SCREEN 3 — LOCATION DETAIL
+  ───────────────────────────────────────── */
+  .screen-detail {
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .detail-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 400px 300px at 50% 0%, rgba(180,60,80,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 300px 400px at 10% 80%, rgba(100,80,180,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .detail-header {
+    padding: 64px 28px 20px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .detail-back {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .detail-location {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .detail-name {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .detail-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .stat-card {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  }
+  .stat-num { font-size: 32px; font-weight: 700; line-height: 1; }
+  .stat-num.danger { color: rgba(240,100,120,0.9); text-shadow: 0 0 20px rgba(240,100,120,0.4); }
+  .stat-num.blue { color: rgba(139,159,255,0.9); text-shadow: 0 0 20px rgba(139,159,255,0.4); }
+  .stat-label { font-size: 11px; color: var(--text3); margin-top: 4px; font-weight: 500; letter-spacing: 0.3px; }
+
+  /* danger meter */
+  .danger-meter {
+    padding: 0 28px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  .danger-bar-bg {
+    height: 8px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .danger-bar-fill {
+    height: 100%;
+    width: 65%;
+    background: linear-gradient(90deg, rgba(139,159,255,0.6), rgba(180,60,80,0.7));
+    border-radius: 4px;
+    position: relative;
+  }
+  .danger-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15));
+  }
+  .danger-meta { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--text3); }
+  .danger-meta .level { color: rgba(240,140,120,0.8); font-weight: 600; }
+
+  /* reports list */
+  .reports-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .report-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .report-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  }
+  .report-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .report-type { display: flex; align-items: center; gap: 6px; }
+  .report-type-icon { font-size: 16px; }
+  .report-type-name { font-size: 12px; font-weight: 600; color: var(--text2); }
+  .report-badge {
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .badge-danger { background: rgba(180,60,80,0.2); color: rgba(240,120,120,0.9); border: 1px solid rgba(180,60,80,0.3); }
+  .badge-medium { background: rgba(167,139,250,0.15); color: rgba(167,139,250,0.9); border: 1px solid rgba(167,139,250,0.25); }
+  .badge-low { background: rgba(100,150,255,0.1); color: rgba(139,159,255,0.8); border: 1px solid rgba(139,159,255,0.2); }
+  .report-text { font-size: 13px; line-height: 1.55; color: var(--text2); }
+  .report-footer { display: flex; justify-content: space-between; margin-top: 8px; }
+  .report-time { font-size: 10px; color: var(--text3); }
+  .report-reactions { display: flex; gap: 4px; font-size: 12px; }
+
+  /* ─────────────────────────────────────────
+     SCREEN 4 — COMMUNITY
+  ───────────────────────────────────────── */
+  .screen-community {
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .community-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 100% -50px, rgba(80,50,120,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 400px 500px at -100px 60%, rgba(60,40,100,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .community-header {
+    padding: 60px 24px 16px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .community-header h2 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+  .community-header p { font-size: 13px; color: var(--text3); margin-top: 4px; }
+
+  /* mood filter chips */
+  .mood-chips {
+    display: flex;
+    gap: 8px;
+    padding: 0 24px 16px;
+    overflow-x: auto;
+    flex-shrink: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mood-chips::-webkit-scrollbar { display: none; }
+  .mood-chip {
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    font-size: 12px;
+    color: var(--text2);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .mood-chip.active {
+    background: rgba(139,159,255,0.12);
+    border-color: rgba(139,159,255,0.3);
+    color: #8B9FFF;
+  }
+
+  /* feed */
+  .community-feed {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .feed-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .feed-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  }
+  .feed-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .feed-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .feed-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border: 1px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+  }
+  .avatar-blue { background: radial-gradient(circle at 40% 35%, rgba(100,130,255,0.6), rgba(60,80,180,0.4)); box-shadow: 0 0 12px rgba(100,130,255,0.3); }
+  .avatar-purple { background: radial-gradient(circle at 40% 35%, rgba(167,139,250,0.6), rgba(100,60,180,0.4)); box-shadow: 0 0 12px rgba(167,139,250,0.3); }
+  .avatar-pink { background: radial-gradient(circle at 40% 35%, rgba(244,114,182,0.6), rgba(180,60,120,0.4)); box-shadow: 0 0 12px rgba(244,114,182,0.3); }
+  .avatar-teal { background: radial-gradient(circle at 40% 35%, rgba(45,212,191,0.6), rgba(20,130,120,0.4)); box-shadow: 0 0 12px rgba(45,212,191,0.3); }
+
+  .feed-user-info .name { font-size: 13px; font-weight: 600; }
+  .feed-user-info .location { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .feed-time { font-size: 11px; color: var(--text3); }
+
+  .feed-text { font-size: 13px; line-height: 1.6; color: var(--text2); margin-bottom: 12px; }
+  .feed-tag {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 8px;
+  }
+
+  .feed-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .feed-reactions { display: flex; gap: 12px; }
+  .feed-reaction {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text3);
+  }
+  .feed-reaction .emoji { font-size: 15px; }
+
+  /* ─────────────────────────────────────────
+     SCREEN 5 — PROFILE
+  ───────────────────────────────────────── */
+  .screen-profile {
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .profile-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 500px 400px at 50% -50px, rgba(100,80,180,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 300px 300px at 80% 90%, rgba(167,139,250,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .profile-hero {
+    padding: 54px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .profile-avatar-wrap {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .profile-avatar-ring {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: conic-gradient(rgba(139,159,255,0.6), rgba(167,139,250,0.6), rgba(244,114,182,0.4), rgba(139,159,255,0.6));
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(139,159,255,0.25);
+    animation: ringRotate 6s linear infinite;
+  }
+  @keyframes ringRotate {
+    from { background: conic-gradient(rgba(139,159,255,0.6), rgba(167,139,250,0.6), rgba(244,114,182,0.4), rgba(139,159,255,0.6)); }
+  }
+  .profile-avatar {
+    width: 90px; height: 90px;
+    background: radial-gradient(circle at 40% 35%, rgba(139,159,255,0.6), rgba(80,60,160,0.5));
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+    animation: ghostFloat 3s ease-in-out infinite;
+    background-color: #0d0d18;
+  }
+  .profile-level-badge {
+    position: absolute;
+    bottom: -4px; right: -4px;
+    background: rgba(139,159,255,0.2);
+    border: 1px solid rgba(139,159,255,0.4);
+    border-radius: 10px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #8B9FFF;
+    backdrop-filter: blur(8px);
+  }
+
+  .profile-name { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  .profile-handle { font-size: 13px; color: var(--text3); margin-top: 2px; }
+
+  .profile-xp-bar {
+    width: 100%;
+    max-width: 200px;
+    margin-top: 14px;
+  }
+  .xp-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-bottom: 5px; }
+  .xp-track {
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .xp-fill {
+    height: 100%;
+    width: 68%;
+    background: linear-gradient(90deg, rgba(139,159,255,0.7), rgba(167,139,250,0.7));
+    border-radius: 2px;
+  }
+
+  /* stats row */
+  .profile-stats {
+    display: flex;
+    gap: 10px;
+    padding: 0 20px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  .pstat {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .pstat-num { font-size: 20px; font-weight: 700; color: #A78BFA; }
+  .pstat-label { font-size: 10px; color: var(--text3); margin-top: 2px; letter-spacing: 0.3px; }
+
+  /* skins section */
+  .skins-section {
+    padding: 0 20px;
+    flex-shrink: 0;
+    margin-bottom: 20px;
+  }
+  .skins-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .skins-header h3 { font-size: 15px; font-weight: 600; }
+  .skins-see-all { font-size: 12px; color: #8B9FFF; }
+  .skins-row { display: flex; gap: 10px; }
+  .skin-item {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .skin-item.active {
+    background: rgba(139,159,255,0.1);
+    border-color: rgba(139,159,255,0.3);
+    box-shadow: 0 0 16px rgba(139,159,255,0.1);
+  }
+  .skin-item.locked { opacity: 0.4; }
+  .skin-icon { font-size: 28px; filter: drop-shadow(0 0 6px rgba(167,139,250,0.5)); }
+  .skin-name { font-size: 10px; color: var(--text3); font-weight: 500; }
+  .skin-item.active .skin-name { color: #8B9FFF; }
+
+  /* achievements */
+  .achievements-section {
+    flex: 1;
+    padding: 0 20px;
+    overflow-y: auto;
+    padding-bottom: 100px;
+  }
+  .ach-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+  .ach-header h3 { font-size: 15px; font-weight: 600; }
+  .ach-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .ach-item {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 10px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .ach-item.earned { border-color: rgba(167,139,250,0.25); background: rgba(167,139,250,0.08); }
+  .ach-icon { font-size: 22px; }
+  .ach-name { font-size: 9px; color: var(--text3); text-align: center; line-height: 1.3; font-weight: 500; }
+  .ach-item.earned .ach-name { color: rgba(167,139,250,0.7); }
+
+  /* ─────────────────────────────────────────
+     DESIGN TOKENS SECTION
+  ───────────────────────────────────────── */
+  .tokens-section {
+    max-width: 900px;
+    margin: 0 auto 80px;
+  }
+  .tokens-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .token-swatch {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .swatch-color { height: 64px; }
+  .swatch-info { padding: 10px 12px; background: rgba(255,255,255,0.03); }
+  .swatch-name { font-size: 12px; font-weight: 600; }
+  .swatch-hex { font-size: 10px; color: var(--text3); margin-top: 2px; font-family: monospace; }
+
+  /* typography showcase */
+  .typo-showcase {
+    max-width: 900px;
+    margin: 0 auto 80px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .typo-item .label { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* ─────────────────────────────────────────
+     UTILITY
+  ───────────────────────────────────────── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.05);
+    margin: 60px 0;
+  }
+  .max-w { max-width: 900px; margin: 0 auto; }
+
+  /* scrollbar hide for phone screens */
+  .phone *::-webkit-scrollbar { display: none; }
+
+  /* glow text */
+  .glow-blue { color: #8B9FFF; text-shadow: 0 0 12px rgba(139,159,255,0.5); }
+  .glow-purple { color: #A78BFA; text-shadow: 0 0 12px rgba(167,139,250,0.5); }
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     PAGE HEADER
+══════════════════════════════════════ -->
+<header class="page-header">
+  <h1>👻 BooMap</h1>
+  <p>High-Fidelity UI Design System · iOS Dark Mode · Glassmorphism · Spooky but Cute</p>
+</header>
+
+<!-- ══════════════════════════════════════
+     ROW 1 — MAP + DROP GHOST
+══════════════════════════════════════ -->
+<div class="max-w">
+  <div class="section-label">Core Screens</div>
+</div>
+
+<div class="phones-row">
+
+  <!-- ── PHONE 1: MAP ── -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <span>●●●</span>
+          <span>WiFi</span>
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <div class="screen-map">
+        <!-- map background -->
+        <div class="map-bg">
+          <div class="map-grid"></div>
+
+          <!-- roads -->
+          <div class="road road-h road-main" style="top:38%;"></div>
+          <div class="road road-h" style="top:52%;"></div>
+          <div class="road road-h" style="top:65%;"></div>
+          <div class="road road-h" style="top:25%;"></div>
+          <div class="road road-v road-main" style="left:40%;"></div>
+          <div class="road road-v" style="left:60%;"></div>
+          <div class="road road-v" style="left:25%;"></div>
+          <div class="road road-v" style="left:72%;"></div>
+
+          <!-- city dots -->
+          <div class="city-dot" style="width:3px;height:3px;top:30%;left:45%;opacity:0.5;"></div>
+          <div class="city-dot" style="width:2px;height:2px;top:55%;left:28%;opacity:0.4;"></div>
+          <div class="city-dot" style="width:2px;height:2px;top:44%;left:67%;opacity:0.3;"></div>
+          <div class="city-dot" style="width:4px;height:4px;top:62%;left:55%;opacity:0.4;"></div>
+          <div class="city-dot" style="width:2px;height:2px;top:70%;left:38%;opacity:0.3;"></div>
+          <div class="city-dot" style="width:3px;height:3px;top:22%;left:58%;opacity:0.4;"></div>
+        </div>
+
+        <!-- danger aura zones -->
+        <div class="danger-zone" style="width:160px;height:120px;top:36%;left:28%;transform:translate(-50%,-50%);"></div>
+        <div class="danger-zone" style="width:100px;height:80px;top:58%;left:62%;transform:translate(-50%,-50%);opacity:0.7;"></div>
+
+        <!-- ghost markers – cluster 1 (danger zone) -->
+        <div class="ghost-marker" style="top:28%;left:18%;">
+          <div class="ghost-icon" style="--size:28px;--glow:rgba(240,100,120,0.7);--op:0.8;--dur:3.2s;--delay:0.2s;">👻</div>
+        </div>
+        <div class="ghost-marker" style="top:32%;left:26%;">
+          <div class="ghost-icon" style="--size:22px;--glow:rgba(240,100,120,0.6);--op:0.7;--dur:2.8s;--delay:0.5s;">👻</div>
+        </div>
+        <div class="ghost-marker" style="top:40%;left:22%;">
+          <div class="ghost-icon" style="--size:18px;--glow:rgba(180,80,100,0.5);--op:0.6;--dur:3.5s;--delay:0.8s;">👻</div>
+        </div>
+        <div class="ghost-marker" style="top:36%;left:32%;">
+          <div class="ghost-icon" style="--size:24px;--glow:rgba(200,80,120,0.6);--op:0.75;--dur:3s;--delay:0.1s;">👻</div>
+        </div>
+
+        <!-- ghost markers – scattered -->
+        <div class="ghost-marker" style="top:50%;left:56%;">
+          <div class="ghost-icon" style="--size:20px;--glow:rgba(139,159,255,0.5);--op:0.6;--dur:4s;--delay:1s;">👻</div>
+        </div>
+        <div class="ghost-marker" style="top:60%;left:64%;">
+          <div class="ghost-icon" style="--size:16px;--glow:rgba(180,60,100,0.5);--op:0.55;--dur:3.8s;--delay:0.4s;">👻</div>
+        </div>
+        <div class="ghost-marker" style="top:22%;left:62%;">
+          <div class="ghost-icon" style="--size:14px;--glow:rgba(139,159,255,0.4);--op:0.5;--dur:4.2s;--delay:0.9s;">👻</div>
+        </div>
+        <div class="ghost-marker" style="top:70%;left:42%;">
+          <div class="ghost-icon" style="--size:16px;--glow:rgba(167,139,250,0.5);--op:0.55;--dur:3.6s;--delay:0.3s;">👻</div>
+        </div>
+
+        <!-- user ghost -->
+        <div class="user-ghost" style="position:absolute;top:48%;left:48%;transform:translate(-50%,-50%);">
+          <div class="user-ghost-icon">👻</div>
+          <div class="user-dot"></div>
+        </div>
+
+        <!-- top bar -->
+        <div class="map-top-bar">
+          <div class="search-pill">
+            <span>🔍</span>
+            <span>搜尋地點...</span>
+          </div>
+          <div class="icon-btn">🔔</div>
+        </div>
+
+        <!-- ghost count card -->
+        <div class="ghost-count">
+          <div class="num">47</div>
+          <div class="lbl">附近幽靈</div>
+        </div>
+
+        <!-- FAB -->
+        <div class="map-fab">👻</div>
+
+        <!-- bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item active">
+            <span class="nav-icon">🗺️</span>
+            <span class="nav-label">地圖</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">➕</span>
+            <span class="nav-label">留下</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">👥</span>
+            <span class="nav-label">社群</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">🌙</span>
+            <span class="nav-label">我的</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">主畫面 · 地圖</div>
+  </div>
+
+  <!-- ── PHONE 2: DROP GHOST ── -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <span>●●●</span>
+          <span>WiFi</span>
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <div class="screen-drop">
+        <div class="drop-bg"></div>
+
+        <!-- sheet handle -->
+        <div class="drop-handle"></div>
+
+        <!-- header -->
+        <div class="drop-header">
+          <h2>留下一個 Ghost</h2>
+          <p>記錄你在這裡的感受，匿名且安全</p>
+        </div>
+
+        <!-- ghost preview -->
+        <div class="drop-ghost-preview">
+          <div class="drop-ghost-anim">👻</div>
+        </div>
+
+        <!-- content -->
+        <div class="drop-content">
+
+          <!-- type selector -->
+          <div>
+            <div class="drop-section-title">Ghost 類型</div>
+            <div class="type-grid">
+              <div class="type-chip selected">
+                <span class="icon">😰</span>
+                <span class="name">不安</span>
+              </div>
+              <div class="type-chip">
+                <span class="icon">⚠️</span>
+                <span class="name">危險</span>
+              </div>
+              <div class="type-chip">
+                <span class="icon">😔</span>
+                <span class="name">低落</span>
+              </div>
+              <div class="type-chip">
+                <span class="icon">😡</span>
+                <span class="name">憤怒</span>
+              </div>
+              <div class="type-chip">
+                <span class="icon">👁️</span>
+                <span class="name">監視</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- text input -->
+          <div>
+            <div class="drop-section-title">說說發生了什麼</div>
+            <div class="text-input-area">
+              <span class="placeholder">在這裡發生了什麼讓你不舒服的事？你的感受很重要…</span>
+            </div>
+          </div>
+
+          <!-- severity -->
+          <div>
+            <div class="drop-section-title">嚴重程度</div>
+            <div class="severity-track">
+              <div class="severity-fill"></div>
+              <div class="severity-thumb"></div>
+            </div>
+            <div class="severity-labels">
+              <span>輕微不適</span>
+              <span>中等</span>
+              <span>非常危險</span>
+            </div>
+          </div>
+
+          <!-- anonymous toggle -->
+          <div class="toggle-row">
+            <div class="toggle-left">
+              <span class="icon">👤</span>
+              <div class="toggle-info">
+                <h4>匿名發佈</h4>
+                <p>其他使用者看不到你的身分</p>
+              </div>
+            </div>
+            <div class="toggle-pill"></div>
+          </div>
+
+          <!-- CTA -->
+          <div class="drop-cta">
+            <span>👻</span>
+            <span>留下 Ghost</span>
+          </div>
+
+        </div><!-- /drop-content -->
+
+        <!-- bottom nav -->
+        <div class="bottom-nav" style="position:relative;bottom:auto;left:auto;right:auto;margin:0 20px 20px;flex-shrink:0;">
+          <div class="nav-item">
+            <span class="nav-icon">🗺️</span>
+            <span class="nav-label">地圖</span>
+          </div>
+          <div class="nav-item active">
+            <span class="nav-icon">➕</span>
+            <span class="nav-label">留下</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">👥</span>
+            <span class="nav-label">社群</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">🌙</span>
+            <span class="nav-label">我的</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">Drop Ghost · 發佈</div>
+  </div>
+
+</div><!-- /phones-row -->
+
+<!-- ══════════════════════════════════════
+     ROW 2 — DETAIL + COMMUNITY
+══════════════════════════════════════ -->
+<div class="phones-row">
+
+  <!-- ── PHONE 3: LOCATION DETAIL ── -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+
+      <div class="screen-detail">
+        <div class="detail-bg"></div>
+
+        <div class="detail-header">
+          <div class="detail-back">←</div>
+          <div class="detail-location">📍 台北市中山區</div>
+          <div class="detail-name">某停車場<br>地下通道</div>
+
+          <!-- stats -->
+          <div class="detail-stats">
+            <div class="stat-card">
+              <div class="stat-num danger">23</div>
+              <div class="stat-label">👻 幽靈數量</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num blue">47</div>
+              <div class="stat-label">👁️ 目擊次數</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- danger meter -->
+        <div class="danger-meter">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-size:12px;font-weight:600;">危險程度</span>
+            <span style="font-size:12px;color:rgba(240,140,120,0.8);font-weight:600;">中高危</span>
+          </div>
+          <div class="danger-bar-bg">
+            <div class="danger-bar-fill"></div>
+          </div>
+          <div class="danger-meta">
+            <span>最近回報：2小時前</span>
+            <span class="level">65 / 100</span>
+          </div>
+        </div>
+
+        <!-- reports -->
+        <div class="reports-list">
+          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:4px;">經驗回報</div>
+
+          <div class="report-card">
+            <div class="report-top">
+              <div class="report-type">
+                <span class="report-type-icon">😰</span>
+                <span class="report-type-name">不安感</span>
+              </div>
+              <div class="report-badge badge-danger">高</div>
+            </div>
+            <div class="report-text">深夜走過這裡感覺有人跟著，燈光很暗，建議避開</div>
+            <div class="report-footer">
+              <span class="report-time">2小時前 · 匿名</span>
+              <div class="report-reactions">
+                <span>👻12</span>
+                <span>💙8</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-top">
+              <div class="report-type">
+                <span class="report-type-icon">⚠️</span>
+                <span class="report-type-name">危險狀況</span>
+              </div>
+              <div class="report-badge badge-medium">中</div>
+            </div>
+            <div class="report-text">監視器有死角，曾遇到陌生人靠近</div>
+            <div class="report-footer">
+              <span class="report-time">昨天 · 匿名</span>
+              <div class="report-reactions">
+                <span>👻7</span>
+                <span>💙4</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-top">
+              <div class="report-type">
+                <span class="report-type-icon">😔</span>
+                <span class="report-type-name">情緒低落</span>
+              </div>
+              <div class="report-badge badge-low">低</div>
+            </div>
+            <div class="report-text">這裡很陰暗，每次走過心情就變得很差</div>
+            <div class="report-footer">
+              <span class="report-time">3天前 · 匿名</span>
+              <div class="report-reactions">
+                <span>👻15</span>
+                <span>💙11</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-top">
+              <div class="report-type">
+                <span class="report-type-icon">👁️</span>
+                <span class="report-type-name">被監視感</span>
+              </div>
+              <div class="report-badge badge-medium">中</div>
+            </div>
+            <div class="report-text">不舒服的眼神，停了很久</div>
+            <div class="report-footer">
+              <span class="report-time">上週 · 匿名</span>
+              <div class="report-reactions">
+                <span>👻9</span>
+                <span>💙6</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /reports-list -->
+      </div>
+    </div>
+    <div class="phone-label">地點詳細頁</div>
+  </div>
+
+  <!-- ── PHONE 4: COMMUNITY ── -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+
+      <div class="screen-community">
+        <div class="community-bg"></div>
+
+        <div class="community-header">
+          <h2>情緒空間</h2>
+          <p>所有 ghost 都被聽見</p>
+        </div>
+
+        <!-- mood filter -->
+        <div class="mood-chips">
+          <div class="mood-chip active">✨ 全部</div>
+          <div class="mood-chip">😰 不安</div>
+          <div class="mood-chip">😔 低落</div>
+          <div class="mood-chip">⚠️ 危險</div>
+          <div class="mood-chip">😡 憤怒</div>
+          <div class="mood-chip">💙 共鳴</div>
+        </div>
+
+        <!-- feed -->
+        <div class="community-feed">
+
+          <div class="feed-card">
+            <div class="feed-card-top">
+              <div class="feed-user">
+                <div class="feed-avatar avatar-purple">👻</div>
+                <div class="feed-user-info">
+                  <div class="name">幽靈_月光</div>
+                  <div class="location">📍 台北 · 信義區</div>
+                </div>
+              </div>
+              <div class="feed-time">10分前</div>
+            </div>
+            <div class="feed-text">走在那條路上的感覺說不清楚，但身體比腦袋先知道了。明明是白天卻覺得很不安全。</div>
+            <span class="feed-tag" style="background:rgba(200,80,100,0.15);color:rgba(240,120,120,0.8);border:1px solid rgba(200,80,100,0.2);">😰 不安</span>
+            <span class="feed-tag" style="background:rgba(139,159,255,0.1);color:rgba(139,159,255,0.8);border:1px solid rgba(139,159,255,0.2);">📍 地點回報</span>
+            <div class="feed-bottom">
+              <div class="feed-reactions">
+                <div class="feed-reaction"><span class="emoji">👻</span> 34</div>
+                <div class="feed-reaction"><span class="emoji">💙</span> 18</div>
+                <div class="feed-reaction"><span class="emoji">🤍</span> 7</div>
+              </div>
+              <span style="font-size:11px;color:var(--text3);">回應</span>
+            </div>
+          </div>
+
+          <div class="feed-card">
+            <div class="feed-card-top">
+              <div class="feed-user">
+                <div class="feed-avatar avatar-blue">👻</div>
+                <div class="feed-user-info">
+                  <div class="name">藍色煙霧</div>
+                  <div class="location">📍 台中 · 西區</div>
+                </div>
+              </div>
+              <div class="feed-time">1小時前</div>
+            </div>
+            <div class="feed-text">看到地圖上這裡有很多 ghost，才意識到不是只有我這樣覺得。謝謝所有留下記錄的人。</div>
+            <span class="feed-tag" style="background:rgba(167,139,250,0.12);color:rgba(167,139,250,0.8);border:1px solid rgba(167,139,250,0.2);">💜 共鳴</span>
+            <div class="feed-bottom">
+              <div class="feed-reactions">
+                <div class="feed-reaction"><span class="emoji">👻</span> 89</div>
+                <div class="feed-reaction"><span class="emoji">💙</span> 52</div>
+                <div class="feed-reaction"><span class="emoji">🤍</span> 23</div>
+              </div>
+              <span style="font-size:11px;color:var(--text3);">回應</span>
+            </div>
+          </div>
+
+          <div class="feed-card">
+            <div class="feed-card-top">
+              <div class="feed-user">
+                <div class="feed-avatar avatar-pink">👻</div>
+                <div class="feed-user-info">
+                  <div class="name">粉紅塵埃</div>
+                  <div class="location">📍 高雄 · 三民區</div>
+                </div>
+              </div>
+              <div class="feed-time">3小時前</div>
+            </div>
+            <div class="feed-text">某個公園到了晚上感覺完全不一樣。白天很平靜，但一到天黑就很不想一個人待。留了個 ghost。</div>
+            <span class="feed-tag" style="background:rgba(200,80,100,0.15);color:rgba(240,120,120,0.8);border:1px solid rgba(200,80,100,0.2);">😰 不安</span>
+            <div class="feed-bottom">
+              <div class="feed-reactions">
+                <div class="feed-reaction"><span class="emoji">👻</span> 41</div>
+                <div class="feed-reaction"><span class="emoji">💙</span> 29</div>
+                <div class="feed-reaction"><span class="emoji">🤍</span> 12</div>
+              </div>
+              <span style="font-size:11px;color:var(--text3);">回應</span>
+            </div>
+          </div>
+
+        </div><!-- /feed -->
+
+        <!-- bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item"><span class="nav-icon">🗺️</span><span class="nav-label">地圖</span></div>
+          <div class="nav-item"><span class="nav-icon">➕</span><span class="nav-label">留下</span></div>
+          <div class="nav-item active"><span class="nav-icon">👥</span><span class="nav-label">社群</span></div>
+          <div class="nav-item"><span class="nav-icon">🌙</span><span class="nav-label">我的</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">社群 · 情緒空間</div>
+  </div>
+
+</div><!-- /phones-row -->
+
+<!-- ══════════════════════════════════════
+     ROW 3 — PROFILE (centered)
+══════════════════════════════════════ -->
+<div class="phones-row">
+
+  <!-- ── PHONE 5: PROFILE ── -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+
+      <div class="screen-profile">
+        <div class="profile-bg"></div>
+
+        <!-- hero -->
+        <div class="profile-hero">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar-ring">
+              <div class="profile-avatar">👻</div>
+            </div>
+            <div class="profile-level-badge">Lv.7</div>
+          </div>
+
+          <div class="profile-name">幽靈_月光</div>
+          <div class="profile-handle">@ghostmoonlight · 加入 143天</div>
+
+          <div class="profile-xp-bar">
+            <div class="xp-label">
+              <span>Ghost Energy</span>
+              <span>680 / 1000 XP</span>
+            </div>
+            <div class="xp-track">
+              <div class="xp-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- stats -->
+        <div class="profile-stats">
+          <div class="pstat">
+            <div class="pstat-num">34</div>
+            <div class="pstat-label">留下的<br>Ghost</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-num">127</div>
+            <div class="pstat-label">獲得<br>共鳴</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-num">8</div>
+            <div class="pstat-label">徽章</div>
+          </div>
+          <div class="pstat">
+            <div class="pstat-num">12</div>
+            <div class="pstat-label">守護的<br>地點</div>
+          </div>
+        </div>
+
+        <!-- skins -->
+        <div class="skins-section">
+          <div class="skins-header">
+            <h3>Ghost 造型</h3>
+            <span class="skins-see-all">全部 →</span>
+          </div>
+          <div class="skins-row">
+            <div class="skin-item active">
+              <span class="skin-icon">👻</span>
+              <span class="skin-name">月光幽靈</span>
+            </div>
+            <div class="skin-item">
+              <span class="skin-icon">💜</span>
+              <span class="skin-name">紫霧精靈</span>
+            </div>
+            <div class="skin-item">
+              <span class="skin-icon">🌙</span>
+              <span class="skin-name">暗夜使者</span>
+            </div>
+            <div class="skin-item locked">
+              <span class="skin-icon">🔮</span>
+              <span class="skin-name">🔒 Lv.10</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- achievements -->
+        <div class="achievements-section">
+          <div class="ach-header">
+            <h3>成就徽章</h3>
+            <span style="font-size:12px;color:#8B9FFF;">全部 →</span>
+          </div>
+          <div class="ach-grid">
+            <div class="ach-item earned">
+              <span class="ach-icon">👻</span>
+              <span class="ach-name">第一個<br>Ghost</span>
+            </div>
+            <div class="ach-item earned">
+              <span class="ach-icon">🗺️</span>
+              <span class="ach-name">探索者</span>
+            </div>
+            <div class="ach-item earned">
+              <span class="ach-icon">💜</span>
+              <span class="ach-name">共鳴達人</span>
+            </div>
+            <div class="ach-item earned">
+              <span class="ach-icon">🌙</span>
+              <span class="ach-name">夜行者</span>
+            </div>
+            <div class="ach-item">
+              <span class="ach-icon">🔮</span>
+              <span class="ach-name">神秘術士</span>
+            </div>
+            <div class="ach-item">
+              <span class="ach-icon">⭐</span>
+              <span class="ach-name">超級貢獻</span>
+            </div>
+            <div class="ach-item">
+              <span class="ach-icon">🌐</span>
+              <span class="ach-name">全台守護</span>
+            </div>
+            <div class="ach-item">
+              <span class="ach-icon">👑</span>
+              <span class="ach-name">Ghost 王</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item"><span class="nav-icon">🗺️</span><span class="nav-label">地圖</span></div>
+          <div class="nav-item"><span class="nav-icon">➕</span><span class="nav-label">留下</span></div>
+          <div class="nav-item"><span class="nav-icon">👥</span><span class="nav-label">社群</span></div>
+          <div class="nav-item active"><span class="nav-icon">🌙</span><span class="nav-label">我的</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">個人頁 · Profile</div>
+  </div>
+
+</div><!-- /phones-row -->
+
+<!-- ══════════════════════════════════════
+     DESIGN TOKENS
+══════════════════════════════════════ -->
+<div class="divider"></div>
+<div class="max-w">
+  <div class="section-label" style="margin-bottom:32px;">Design Tokens · 設計系統</div>
+
+  <div class="tokens-section">
+    <div style="margin-bottom:24px;">
+      <div class="section-label" style="margin-bottom:16px;">Color Palette</div>
+      <div class="tokens-grid">
+        <div class="token-swatch">
+          <div class="swatch-color" style="background:#0B0B0F;border-bottom:1px solid rgba(255,255,255,0.06);"></div>
+          <div class="swatch-info"><div class="swatch-name">Background</div><div class="swatch-hex">#0B0B0F</div></div>
+        </div>
+        <div class="token-swatch">
+          <div class="swatch-color" style="background:rgba(255,255,255,0.05);"></div>
+          <div class="swatch-info"><div class="swatch-name">Surface</div><div class="swatch-hex">rgba(255,255,255,0.05)</div></div>
+        </div>
+        <div class="token-swatch">
+          <div class="swatch-color" style="background:#8B9FFF;"></div>
+          <div class="swatch-info"><div class="swatch-name">Blue Glow</div><div class="swatch-hex">#8B9FFF</div></div>
+        </div>
+        <div class="token-swatch">
+          <div class="swatch-color" style="background:#A78BFA;"></div>
+          <div class="swatch-info"><div class="swatch-name">Purple</div><div class="swatch-hex">#A78BFA</div></div>
+        </div>
+        <div class="token-swatch">
+          <div class="swatch-color" style="background:#F472B6;"></div>
+          <div class="swatch-info"><div class="swatch-name">Pink Accent</div><div class="swatch-hex">#F472B6</div></div>
+        </div>
+        <div class="token-swatch">
+          <div class="swatch-color" style="background:rgba(180,60,80,0.7);"></div>
+          <div class="swatch-info"><div class="swatch-name">Danger</div><div class="swatch-hex">rgba(180,60,80,0.7)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label" style="margin-bottom:16px;">Typography Scale</div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <div class="section-label" style="margin-bottom:6px;">Display · 32px / 700</div>
+          <div style="font-size:32px;font-weight:700;letter-spacing:-1px;background:linear-gradient(135deg,#8B9FFF,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">這個世界會記住你的情緒</div>
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:6px;">Headline · 24px / 700</div>
+          <div style="font-size:24px;font-weight:700;letter-spacing:-0.5px;">留下一個 Ghost</div>
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:6px;">Body · 14px / 400</div>
+          <div style="font-size:14px;line-height:1.6;color:rgba(255,255,255,0.6);">記錄你在這裡的感受，匿名且安全。每一個 ghost 都象徵一小塊被留下的情緒記憶碎片。</div>
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:6px;">Label · 11px / 600 / +1.5px tracking</div>
+          <div style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Ghost 類型 · SEVERITY · LOCATION</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BooMap — Emotional Sketch</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Noto+Serif+JP:wght@300;400&display=swap');
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -71,22 +73,15 @@ body { background:#080808; font-family:'Noto Sans JP',sans-serif; color:var(--t1
 .phone *::-webkit-scrollbar { display:none; }
 
 .screen-map { width:100%; height:100%; position:relative; background:#070709; overflow:hidden; }
-.map-grid {
-  position:absolute; inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
-  background-size:50px 50px;
-}
 .map-vignette {
-  position:absolute; inset:0; z-index:1; pointer-events:none;
-  background:radial-gradient(ellipse at 50% 60%,transparent 35%,rgba(6,6,8,0.55) 100%);
+  position:absolute; inset:0; z-index:3; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 60%,transparent 30%,rgba(6,6,8,0.45) 100%);
 }
-.road   { position:absolute; z-index:1; background:rgba(255,255,255,0.038); }
-.road-h { height:1px; left:0; right:0; }
-.road-v { width:1px; top:0; bottom:0; }
-.road-hm{ height:2px; left:0; right:0; background:rgba(255,255,255,0.052); }
-.road-vm{ width:2px; top:0; bottom:0; background:rgba(255,255,255,0.052); }
+/* Leaflet overrides inside phone */
+#lmap { position:absolute; inset:0; z-index:0; }
+#lmap .leaflet-tile-pane { filter: brightness(0.72) saturate(0.5); }
+#lmap .leaflet-control-container { display:none; }
+#lmap .leaflet-attribution-flag { display:none; }
 .wc-zone { position:absolute; pointer-events:none; z-index:2; overflow:visible; }
 .mc { position:absolute; display:flex; flex-direction:column; align-items:center; gap:2px; z-index:10; }
 .mc-shadow { width:55%; height:4px; border-radius:50%; background:rgba(0,0,0,0.5); filter:blur(2px); animation:breathe var(--dur,3.2s) ease-in-out infinite; animation-delay:var(--d,0s); }
@@ -307,15 +302,8 @@ body { background:#080808; font-family:'Noto Sans JP',sans-serif; color:var(--t1
     <div class="phone">
       <div class="status-bar"><span class="time">9:41</span><span>●●● WiFi 🔋</span></div>
       <div class="screen-map">
-        <div class="map-grid"></div>
+        <div id="lmap"></div>
         <div class="map-vignette"></div>
-        <div class="road road-hm" style="top:40%;"></div>
-        <div class="road road-h"  style="top:56%;"></div>
-        <div class="road road-h"  style="top:27%;"></div>
-        <div class="road road-h"  style="top:68%;"></div>
-        <div class="road road-vm" style="left:42%;"></div>
-        <div class="road road-v"  style="left:62%;"></div>
-        <div class="road road-v"  style="left:24%;"></div>
 
         <svg class="wc-zone" style="top:12%;left:4%;width:250px;height:210px;" viewBox="0 0 250 210">
           <ellipse cx="115" cy="100" rx="105" ry="85" fill="rgba(200,218,255,0.042)" filter="url(#zone-blur)"/>
@@ -640,5 +628,20 @@ body { background:#080808; font-family:'Noto Sans JP',sans-serif; color:var(--t1
   </div>
 </div>
 
+<script>
+// CartoDB Dark Matter — no API key required
+var lmap = L.map('lmap', {
+  center: [25.0478, 121.5319],  // 台北大安區
+  zoom: 16,
+  zoomControl: false,
+  attributionControl: false,
+  scrollWheelZoom: false,
+  doubleClickZoom: false
+});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  subdomains: 'abcd',
+  maxZoom: 20
+}).addTo(lmap);
+</script>
 </body>
 </html>

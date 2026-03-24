@@ -3,104 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BooMap — Mono</title>
+<title>BooMap — Emotional Sketch</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Noto+Serif+JP:wght@300;400&display=swap');
 * { margin:0; padding:0; box-sizing:border-box; }
-
 :root {
-  --bg:   #0A0A0A;
-  --line: rgba(255,255,255,0.07);
-  --t1:   rgba(255,255,255,0.90);
-  --t2:   rgba(255,255,255,0.45);
-  --t3:   rgba(255,255,255,0.22);
-  --t4:   rgba(255,255,255,0.10);
+  --bg:#0A0A0A; --line:rgba(255,255,255,0.07);
+  --t1:rgba(255,255,255,0.90); --t2:rgba(255,255,255,0.45);
+  --t3:rgba(255,255,255,0.22); --t4:rgba(255,255,255,0.10);
 }
+body { background:#080808; font-family:'Noto Sans JP',sans-serif; color:var(--t1); padding:48px 20px 100px; }
 
-body {
-  background: #080808;
-  font-family: 'Noto Sans JP', sans-serif;
-  color: var(--t1);
-  padding: 48px 20px 100px;
-}
+.gh  { display:inline-block; flex-shrink:0; overflow:visible; filter:url(#rough) drop-shadow(0 0 7px rgba(210,225,255,0.18)); }
+.bn  { display:inline-block; flex-shrink:0; overflow:visible; filter:url(#rough); }
+.pg  { display:inline-block; flex-shrink:0; overflow:visible; filter:url(#rough) drop-shadow(0 0 5px rgba(210,225,255,0.14)); }
+.rp  { display:inline-block; flex-shrink:0; overflow:visible; filter:url(#rough); }
+.sk  { display:inline-block; flex-shrink:0; overflow:visible; filter:url(#rough); }
 
-/* ══════════════════════════════════════════
-   STICKER SYSTEM
-   白底角色圖片放在深色介面上 = 貼紙感
-   mix-blend-mode: multiply 讓白色背景消失
-══════════════════════════════════════════ */
+.gh-xs   { width:20px; height:26px; }
+.gh-sm   { width:28px; height:36px; }
+.gh-md   { width:38px; height:48px; }
+.gh-lg   { width:56px; height:70px; }
+.gh-hero { width:76px; height:96px; }
+.pg-xs { width:18px; height:26px; }
+.pg-sm { width:24px; height:34px; }
+.pg-lg { width:44px; height:60px; }
+.bn-xs { width:22px; height:14px; }
+.bn-sm { width:32px; height:20px; }
+.sk-sm { width:22px; height:24px; }
+.sk-md { width:30px; height:32px; }
+.rp-sm { width:22px; height:26px; }
+.rp-md { width:30px; height:36px; }
+.rp-lg { width:42px; height:50px; }
 
-.s {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-/* sizes */
-.s-xs   { width:24px;  height:24px;  font-size:14px; }
-.s-sm   { width:32px;  height:32px;  font-size:18px; }
-.s-md   { width:44px;  height:44px;  font-size:26px; }
-.s-lg   { width:64px;  height:64px;  font-size:38px; }
-.s-hero { width:90px;  height:90px;  font-size:54px; }
-
-/* pin — same emoji, slightly smaller container */
-.s-pin-xs   { width:18px;  height:24px;  font-size:14px; }
-.s-pin-sm   { width:24px;  height:32px;  font-size:16px; }
-.s-pin-md   { width:32px;  height:44px;  font-size:20px; }
-.s-pin-lg   { width:48px;  height:64px;  font-size:28px; }
-.s-pin-hero { width:68px;  height:90px;  font-size:40px; }
-
-/* tombstone */
-.s-rip-sm  { width:36px; height:30px; font-size:18px; }
-.s-rip-md  { width:50px; height:42px; font-size:24px; }
-.s-rip-lg  { width:70px; height:58px; font-size:34px; }
-
-/* ── ANIMATIONS ── */
-@keyframes drift {
-  0%,100% { transform:translateY(0) rotate(-1deg); }
-  50%      { transform:translateY(-5px) rotate(1deg); }
-}
-@keyframes driftFast {
-  0%,100% { transform:translateY(0); }
-  50%      { transform:translateY(-4px); }
-}
+@keyframes drift    { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-5px) rotate(1deg)} }
+@keyframes driftF   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
 @keyframes breathe  { 0%,100%{opacity:0.5} 50%{opacity:1} }
-@keyframes rippleOut { 0%{transform:scale(1);opacity:0.3} 100%{transform:scale(2.8);opacity:0} }
-@keyframes shimmer {
-  0%   { background-position: 200% center; }
-  100% { background-position: -200% center; }
-}
+@keyframes rippleOut{ 0%{transform:scale(1);opacity:0.3} 100%{transform:scale(2.8);opacity:0} }
+.float  { animation:drift  var(--dur,3.2s) ease-in-out infinite; animation-delay:var(--d,0s); }
+.floatF { animation:driftF var(--dur,2.8s) ease-in-out infinite; animation-delay:var(--d,0s); }
 
-/* apply drift to stickers where needed */
-.float  { animation: drift var(--dur,3.2s) ease-in-out infinite; animation-delay:var(--d,0s); }
-.floatF { animation: driftFast var(--dur,2.8s) ease-in-out infinite; animation-delay:var(--d,0s); }
-
-/* ── PAGE HEADER ── */
 .page-header { text-align:center; margin-bottom:80px; }
-.page-header h1 {
-  font-size:40px; font-weight:300; letter-spacing:14px;
-  text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:8px;
-}
+.page-header h1 { font-size:40px; font-weight:300; letter-spacing:14px; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:8px; }
 .jp-sub { font-family:'Noto Serif JP'; font-size:13px; color:var(--t3); letter-spacing:4px; font-weight:300; }
 .sub    { font-size:10px; color:var(--t3); letter-spacing:3px; text-transform:uppercase; margin-top:10px; }
+.sec    { font-size:10px; font-weight:400; letter-spacing:3px; text-transform:uppercase; color:var(--t3); margin-bottom:32px; }
 
-/* ── SECTION ── */
-.sec { font-size:10px; font-weight:400; letter-spacing:3px; text-transform:uppercase; color:var(--t3); margin-bottom:32px; }
-
-/* ── PHONE FRAME ── */
-.phones-row { display:flex; gap:40px; justify-content:center; align-items:flex-start; flex-wrap:wrap; margin-bottom:80px; }
-.phone-wrap { display:flex; flex-direction:column; align-items:center; gap:16px; }
+.phones-row  { display:flex; gap:40px; justify-content:center; align-items:flex-start; flex-wrap:wrap; margin-bottom:80px; }
+.phone-wrap  { display:flex; flex-direction:column; align-items:center; gap:16px; }
 .phone-label { font-size:10px; color:var(--t3); letter-spacing:2px; text-transform:uppercase; }
 .phone {
-  width:390px; height:844px;
-  background:var(--bg);
+  width:390px; height:844px; background:var(--bg);
   border-radius:52px; overflow:hidden; position:relative;
   border:1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.95), 0 40px 100px rgba(0,0,0,0.9);
-  flex-shrink:0;
+  box-shadow:0 0 0 1px rgba(0,0,0,0.95), 0 40px 100px rgba(0,0,0,0.9); flex-shrink:0;
 }
 .phone::before {
   content:''; position:absolute; top:0; left:50%; transform:translateX(-50%);
@@ -114,293 +70,137 @@ body {
 .status-bar .time { font-size:14px; font-weight:300; letter-spacing:1px; }
 .phone *::-webkit-scrollbar { display:none; }
 
-/* ══════════════════════════════════════════
-   SCREEN 1 — MAP
-══════════════════════════════════════════ */
-.screen-map { width:100%; height:100%; position:relative; background:var(--bg); overflow:hidden; }
-
+.screen-map { width:100%; height:100%; position:relative; background:#070709; overflow:hidden; }
 .map-grid {
   position:absolute; inset:0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
   background-size:50px 50px;
 }
-.road   { position:absolute; background:rgba(255,255,255,0.04); }
+.map-vignette {
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 60%,transparent 35%,rgba(6,6,8,0.55) 100%);
+}
+.road   { position:absolute; z-index:1; background:rgba(255,255,255,0.038); }
 .road-h { height:1px; left:0; right:0; }
 .road-v { width:1px; top:0; bottom:0; }
-.road-hm{ height:2px; left:0; right:0; background:rgba(255,255,255,0.065); }
-.road-vm{ width:2px; top:0; bottom:0; background:rgba(255,255,255,0.065); }
-
-/* subtle zone circle */
-.zone {
-  position:absolute; border-radius:50%; pointer-events:none;
-  border:1px solid rgba(255,255,255,0.06);
-  background:radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
-}
-
-/* map character wrapper */
-.mc {
-  position:absolute;
-  display:flex; flex-direction:column; align-items:center; gap:3px;
-  z-index:10;
-}
-/* subtle shadow blob under each map character */
-.mc-shadow {
-  width:65%; height:4px; border-radius:50%;
-  background:rgba(0,0,0,0.45); filter:blur(2px);
-  animation: breathe var(--dur,3.2s) ease-in-out infinite;
-  animation-delay:var(--d,0s);
-}
-
-/* user position */
-.user-pos { position:absolute; display:flex; flex-direction:column; align-items:center; gap:5px; z-index:12; }
-.user-ring {
-  position:absolute; width:58px; height:58px; border-radius:50%;
-  border:1px solid rgba(255,255,255,0.18);
-  animation:rippleOut 2.8s ease-out infinite;
-}
+.road-hm{ height:2px; left:0; right:0; background:rgba(255,255,255,0.052); }
+.road-vm{ width:2px; top:0; bottom:0; background:rgba(255,255,255,0.052); }
+.wc-zone { position:absolute; pointer-events:none; z-index:2; overflow:visible; }
+.mc { position:absolute; display:flex; flex-direction:column; align-items:center; gap:2px; z-index:10; }
+.mc-shadow { width:55%; height:4px; border-radius:50%; background:rgba(0,0,0,0.5); filter:blur(2px); animation:breathe var(--dur,3.2s) ease-in-out infinite; animation-delay:var(--d,0s); }
+.user-pos { position:absolute; display:flex; flex-direction:column; align-items:center; gap:4px; z-index:12; }
+.user-ring { position:absolute; width:52px; height:52px; border-radius:50%; border:1px solid rgba(255,255,255,0.16); animation:rippleOut 2.8s ease-out infinite; }
 .user-ring2 { animation-delay:1.4s; }
-.user-lbl { font-size:9px; color:var(--t3); letter-spacing:1px; }
-
-/* friend */
-.friend { position:absolute; display:flex; flex-direction:column; align-items:center; gap:4px; z-index:11; }
-.friend-lbl {
-  font-size:9px; color:var(--t3); letter-spacing:0.5px;
-  background:rgba(0,0,0,0.7); padding:2px 7px; border-radius:8px;
-  border:1px solid rgba(255,255,255,0.07); white-space:nowrap;
-}
-
-/* top search bar */
+.user-lbl   { font-size:9px; color:var(--t3); letter-spacing:1px; }
+.friend { position:absolute; display:flex; flex-direction:column; align-items:center; gap:3px; z-index:11; }
+.friend-lbl { font-size:9px; color:var(--t3); background:rgba(0,0,0,0.72); padding:2px 7px; border-radius:8px; border:1px solid rgba(255,255,255,0.07); white-space:nowrap; }
 .map-top { position:absolute; top:60px; left:20px; right:20px; display:flex; gap:10px; z-index:50; }
-.search-bar {
-  flex:1; height:42px;
-  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:4px;
-  display:flex; align-items:center; padding:0 14px; gap:8px;
-  color:var(--t3); font-size:12px; letter-spacing:0.5px;
-}
-.sq-btn {
-  width:42px; height:42px;
-  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:4px;
-  display:flex; align-items:center; justify-content:center; color:var(--t3); font-size:13px; letter-spacing:1px;
-}
-
-/* info chips */
-.chip {
-  position:absolute; z-index:50;
-  background:rgba(8,8,8,0.92); border:1px solid rgba(255,255,255,0.08);
-  border-radius:4px; padding:8px 12px; backdrop-filter:blur(12px);
-}
+.search-bar { flex:1; height:42px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:4px; display:flex; align-items:center; padding:0 14px; gap:8px; color:var(--t3); font-size:12px; }
+.sq-btn { width:42px; height:42px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:4px; display:flex; align-items:center; justify-content:center; color:var(--t3); font-size:13px; }
+.chip { position:absolute; z-index:50; background:rgba(7,7,9,0.92); border:1px solid rgba(255,255,255,0.08); border-radius:4px; padding:8px 12px; backdrop-filter:blur(12px); }
 .chip-num { font-size:18px; font-weight:300; color:rgba(255,255,255,0.8); letter-spacing:1px; }
 .chip-lbl { font-size:10px; color:var(--t3); margin-top:2px; letter-spacing:0.8px; }
-
-/* FAB */
-.fab {
-  position:absolute; bottom:108px; left:50%; transform:translateX(-50%);
-  width:62px; height:62px;
-  background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14);
-  border-radius:8px;
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:0 4px 20px rgba(0,0,0,0.5); z-index:50;
-  animation:breathe 3.5s ease-in-out infinite;
-}
-
-/* bottom nav */
-.bnav {
-  position:absolute; bottom:20px; left:20px; right:20px; height:68px;
-  background:rgba(8,8,8,0.94); border:1px solid rgba(255,255,255,0.07); border-radius:6px;
-  display:flex; align-items:center; justify-content:space-around;
-  z-index:100; backdrop-filter:blur(20px);
-}
+.fab { position:absolute; bottom:108px; left:50%; transform:translateX(-50%); width:62px; height:62px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14); border-radius:8px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,0.5); z-index:50; animation:breathe 3.5s ease-in-out infinite; }
+.bnav { position:absolute; bottom:20px; left:20px; right:20px; height:68px; background:rgba(7,7,9,0.94); border:1px solid rgba(255,255,255,0.07); border-radius:6px; display:flex; align-items:center; justify-content:space-around; z-index:100; backdrop-filter:blur(20px); }
 .ni { display:flex; flex-direction:column; align-items:center; gap:5px; padding:6px 14px; }
 .ni .nlbl { font-size:10px; color:var(--t3); letter-spacing:0.5px; }
 .ni.on .nlbl { color:rgba(255,255,255,0.65); }
 
-/* ══════════════════════════════════════════
-   SCREEN 2 — DROP GHOST
-══════════════════════════════════════════ */
-.screen-drop {
-  width:100%; height:100%; background:var(--bg);
-  display:flex; flex-direction:column; overflow:hidden;
-}
+.screen-drop { width:100%; height:100%; background:var(--bg); display:flex; flex-direction:column; overflow:hidden; }
 .handle { width:32px; height:1px; background:rgba(255,255,255,0.12); margin:20px auto 0; flex-shrink:0; }
-.drop-hdr {
-  padding:22px 28px 18px; flex-shrink:0;
-  border-bottom:1px solid var(--line);
-}
+.drop-hdr { padding:22px 28px 18px; flex-shrink:0; border-bottom:1px solid var(--line); }
 .drop-hdr h2 { font-size:21px; font-weight:300; letter-spacing:2px; }
 .drop-hdr p  { font-size:11px; color:var(--t3); margin-top:5px; letter-spacing:1px; font-style:italic; }
-
-.drop-hero {
-  display:flex; flex-direction:column; align-items:center; gap:8px;
-  padding:26px 0 14px; flex-shrink:0;
-}
+.drop-hero { display:flex; flex-direction:column; align-items:center; gap:8px; padding:26px 0 14px; flex-shrink:0; }
 .drop-hero-lbl { font-size:10px; color:var(--t3); letter-spacing:2px; text-transform:uppercase; }
-
-.drop-body { flex:1; overflow-y:auto; padding:0 24px; display:flex; flex-direction:column; gap:18px; padding-bottom:16px; }
+.drop-body { flex:1; overflow-y:auto; padding:0 24px 16px; display:flex; flex-direction:column; gap:18px; }
 .field-lbl { font-size:10px; color:var(--t3); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
-
-/* type chips */
 .type-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
-.type-chip {
-  display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 4px;
-  border:1px solid rgba(255,255,255,0.07); border-radius:2px;
-}
+.type-chip { display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 4px; border:1px solid rgba(255,255,255,0.07); border-radius:2px; }
 .type-chip.sel { border-color:rgba(255,255,255,0.28); background:rgba(255,255,255,0.03); }
-.tc-lbl { font-size:9px; color:var(--t3); letter-spacing:0.5px; }
+.tc-lbl { font-size:9px; color:var(--t3); }
 .type-chip.sel .tc-lbl { color:rgba(255,255,255,0.6); }
-
-/* textarea */
-.textarea {
-  background:transparent; border:none;
-  border-bottom:1px solid rgba(255,255,255,0.1);
-  padding:12px 0; font-size:13px; font-weight:300; color:var(--t1);
-  width:100%; min-height:76px; line-height:1.7;
-  font-family:inherit; letter-spacing:0.5px; resize:none; outline:none;
-}
+.textarea { background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,0.1); padding:12px 0; font-size:13px; font-weight:300; color:var(--t1); width:100%; min-height:76px; line-height:1.7; font-family:inherit; resize:none; outline:none; }
 .textarea::placeholder { color:var(--t3); }
 .char-count { font-size:10px; color:var(--t4); text-align:right; margin-top:4px; }
-
-/* severity dots */
 .sev-row { display:flex; gap:10px; align-items:center; }
 .dot { width:9px; height:9px; border-radius:50%; border:1px solid rgba(255,255,255,0.18); flex-shrink:0; }
 .dot.on  { background:rgba(255,255,255,0.7); border-color:rgba(255,255,255,0.7); }
 .dot.mid { background:rgba(255,255,255,0.3); border-color:rgba(255,255,255,0.35); }
-.sev-lbl { font-size:11px; color:var(--t3); margin-left:4px; letter-spacing:0.5px; }
-
-/* toggle */
-.toggle-row {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:14px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-}
+.sev-lbl { font-size:11px; color:var(--t3); margin-left:4px; }
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
 .tl { display:flex; align-items:center; gap:10px; }
-.ti-info h4 { font-size:13px; font-weight:400; letter-spacing:0.5px; }
+.ti-info h4 { font-size:13px; font-weight:400; }
 .ti-info p  { font-size:11px; color:var(--t3); margin-top:2px; }
-.toggle {
-  width:40px; height:22px; border-radius:11px;
-  background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); position:relative;
-}
-.toggle::after {
-  content:''; position:absolute; top:3px; right:3px;
-  width:14px; height:14px; border-radius:50%; background:rgba(255,255,255,0.8);
-}
+.toggle { width:40px; height:22px; border-radius:11px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); position:relative; }
+.toggle::after { content:''; position:absolute; top:3px; right:3px; width:14px; height:14px; border-radius:50%; background:rgba(255,255,255,0.8); }
+.cta { height:52px; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:400; color:rgba(255,255,255,0.65); letter-spacing:2.5px; text-transform:uppercase; }
 
-/* CTA */
-.cta {
-  height:52px; background:transparent;
-  border:1px solid rgba(255,255,255,0.2); border-radius:2px;
-  display:flex; align-items:center; justify-content:center; gap:12px;
-  font-size:12px; font-weight:400; color:rgba(255,255,255,0.65);
-  letter-spacing:2.5px; text-transform:uppercase;
-}
-
-/* ══════════════════════════════════════════
-   SCREEN 3 — COMMUNITY
-══════════════════════════════════════════ */
-.screen-comm {
-  width:100%; height:100%; background:var(--bg);
-  display:flex; flex-direction:column; overflow:hidden;
-}
+.screen-comm { width:100%; height:100%; background:var(--bg); display:flex; flex-direction:column; overflow:hidden; }
 .comm-hdr { padding:60px 24px 14px; flex-shrink:0; border-bottom:1px solid var(--line); }
 .comm-hdr h2 { font-size:24px; font-weight:300; letter-spacing:3px; }
 .comm-jp { font-family:'Noto Serif JP'; font-size:11px; color:var(--t3); margin-top:6px; letter-spacing:1.5px; }
-
 .tabs { display:flex; padding:0 24px; flex-shrink:0; overflow-x:auto; border-bottom:1px solid var(--line); }
-.tabs::-webkit-scrollbar { display:none; }
-.tab {
-  padding:11px 16px; font-size:11px; color:var(--t3);
-  letter-spacing:1px; white-space:nowrap; flex-shrink:0;
-  border-bottom:1px solid transparent; margin-bottom:-1px;
-}
+.tab { padding:11px 16px; font-size:11px; color:var(--t3); letter-spacing:1px; white-space:nowrap; flex-shrink:0; border-bottom:1px solid transparent; margin-bottom:-1px; }
 .tab.on { color:rgba(255,255,255,0.72); border-bottom-color:rgba(255,255,255,0.38); }
-
 .feed { flex:1; overflow-y:auto; display:flex; flex-direction:column; }
 .post { padding:18px 24px; border-bottom:1px solid var(--line); }
-.post-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.post-top  { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
 .post-user { display:flex; align-items:center; gap:10px; }
-.post-name { font-size:13px; font-weight:400; letter-spacing:0.5px; }
-.post-loc  { font-size:10px; color:var(--t3); margin-top:2px; letter-spacing:0.5px; }
+.post-name { font-size:13px; font-weight:400; }
+.post-loc  { font-size:10px; color:var(--t3); margin-top:2px; }
 .post-time { font-size:10px; color:var(--t3); }
-.post-text { font-size:13px; line-height:1.8; color:var(--t2); font-weight:300; letter-spacing:0.3px; margin-bottom:10px; }
-.post-tag  {
-  font-size:10px; color:var(--t3); letter-spacing:1.5px; text-transform:uppercase;
-  border-bottom:1px solid rgba(255,255,255,0.1); display:inline-block; padding-bottom:2px;
-}
+.post-text { font-size:13px; line-height:1.8; color:var(--t2); font-weight:300; margin-bottom:10px; }
+.post-tag  { font-size:10px; color:var(--t3); letter-spacing:1.5px; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.1); display:inline-block; padding-bottom:2px; }
 .post-btm  { display:flex; align-items:center; justify-content:space-between; margin-top:10px; }
 .reacts    { display:flex; gap:14px; }
-.react     { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--t3); letter-spacing:0.5px; }
+.react     { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--t3); }
 
-/* ══════════════════════════════════════════
-   SCREEN 4 — PROFILE
-══════════════════════════════════════════ */
-.screen-profile {
-  width:100%; height:100%; background:var(--bg);
-  display:flex; flex-direction:column; overflow:hidden;
-}
-.p-hero {
-  padding:54px 24px 22px; display:flex; flex-direction:column; align-items:center;
-  flex-shrink:0; border-bottom:1px solid var(--line);
-}
+.screen-profile { width:100%; height:100%; background:var(--bg); display:flex; flex-direction:column; overflow:hidden; }
+.p-hero { padding:54px 24px 22px; display:flex; flex-direction:column; align-items:center; flex-shrink:0; border-bottom:1px solid var(--line); }
 .p-av-wrap { position:relative; margin-bottom:14px; }
-.p-lv {
-  position:absolute; bottom:-4px; right:-10px;
-  background:rgba(8,8,8,0.92); border:1px solid rgba(255,255,255,0.15);
-  border-radius:10px; padding:2px 7px;
-  font-size:10px; font-weight:400; color:var(--t2); letter-spacing:1px;
-}
+.p-lv { position:absolute; bottom:-4px; right:-10px; background:rgba(8,8,8,0.92); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:2px 7px; font-size:10px; font-weight:400; color:var(--t2); letter-spacing:1px; }
 .p-name   { font-size:20px; font-weight:300; letter-spacing:3px; }
 .p-handle { font-size:11px; color:var(--t3); margin-top:4px; letter-spacing:1.5px; }
 .xp-wrap  { width:180px; margin-top:14px; }
 .xp-top   { display:flex; justify-content:space-between; font-size:10px; color:var(--t3); margin-bottom:5px; }
 .xp-track { height:1px; background:rgba(255,255,255,0.1); }
 .xp-fill  { height:100%; width:68%; background:rgba(255,255,255,0.4); }
-
 .p-stats  { display:flex; border-bottom:1px solid var(--line); flex-shrink:0; }
-.pst      { flex:1; padding:16px 8px; text-align:center; border-right:1px solid var(--line); }
+.pst { flex:1; padding:16px 8px; text-align:center; border-right:1px solid var(--line); }
 .pst:last-child { border-right:none; }
-.pst-num  { font-size:20px; font-weight:300; color:rgba(255,255,255,0.8); letter-spacing:1px; }
-.pst-lbl  { font-size:10px; color:var(--t3); margin-top:3px; letter-spacing:0.5px; }
-
+.pst-num { font-size:20px; font-weight:300; color:rgba(255,255,255,0.8); }
+.pst-lbl { font-size:10px; color:var(--t3); margin-top:3px; }
 .p-scroll { flex:1; overflow-y:auto; padding-bottom:100px; }
 .p-sec    { padding:18px 24px; border-bottom:1px solid var(--line); }
 .p-sec-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
 .p-sec-title { font-size:10px; color:var(--t2); letter-spacing:2px; text-transform:uppercase; }
-.p-sec-more  { font-size:10px; color:var(--t3); letter-spacing:1px; }
-
+.p-sec-more  { font-size:10px; color:var(--t3); }
 .skin-row { display:flex; gap:10px; }
-.skin {
-  flex:1; padding:12px 8px;
-  border:1px solid rgba(255,255,255,0.07); border-radius:2px;
-  display:flex; flex-direction:column; align-items:center; gap:8px;
-}
+.skin { flex:1; padding:12px 8px; border:1px solid rgba(255,255,255,0.07); border-radius:2px; display:flex; flex-direction:column; align-items:center; gap:8px; }
 .skin.on  { border-color:rgba(255,255,255,0.22); background:rgba(255,255,255,0.02); }
 .skin.off { opacity:0.28; }
-.skin-name { font-size:9px; color:var(--t3); letter-spacing:0.5px; }
+.skin-name { font-size:9px; color:var(--t3); }
 .skin.on .skin-name { color:rgba(255,255,255,0.45); }
-
 .ach-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-.ach      {
-  border:1px solid rgba(255,255,255,0.06); border-radius:2px;
-  padding:10px 6px; display:flex; flex-direction:column; align-items:center; gap:5px;
-}
-.ach.on   { border-color:rgba(255,255,255,0.14); }
-.ach .s   { opacity:0.45; }
-.ach.on .s{ opacity:0.85; }
-.ach-name { font-size:9px; color:var(--t3); text-align:center; line-height:1.35; letter-spacing:0.3px; }
+.ach { border:1px solid rgba(255,255,255,0.06); border-radius:2px; padding:10px 6px; display:flex; flex-direction:column; align-items:center; gap:5px; }
+.ach.on { border-color:rgba(255,255,255,0.14); }
+.ach-name { font-size:9px; color:var(--t3); text-align:center; line-height:1.35; }
 
-/* ── SHARED ── */
-.divider { width:100%; height:1px; background:rgba(255,255,255,0.04); margin:60px 0; }
-.max-w   { max-width:960px; margin:0 auto; }
+.divider  { width:100%; height:1px; background:rgba(255,255,255,0.04); margin:60px 0; }
+.max-w    { max-width:960px; margin:0 auto; }
 .ds-panel { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:4px; padding:40px; margin-bottom:40px; }
 .ds-panel h3 { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--t3); margin-bottom:28px; }
 .char-legend { display:flex; gap:32px; flex-wrap:wrap; margin-bottom:40px; align-items:flex-end; }
 .cl-item { display:flex; flex-direction:column; align-items:center; gap:10px; }
-.cl-name { font-size:10px; color:var(--t3); letter-spacing:0.5px; text-align:center; line-height:1.6; }
-.sw-row  { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px; }
-.sw      { border-radius:2px; overflow:hidden; border:1px solid rgba(255,255,255,0.05); width:130px; }
-.sw-c    { height:48px; }
+.cl-name { font-size:10px; color:var(--t3); text-align:center; line-height:1.6; }
+.sw-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px; }
+.sw { border-radius:2px; overflow:hidden; border:1px solid rgba(255,255,255,0.05); width:130px; }
+.sw-c { height:48px; }
 .sw-info { padding:8px 10px; background:rgba(255,255,255,0.02); }
-.sw-name { font-size:11px; color:var(--t2); letter-spacing:0.5px; }
+.sw-name { font-size:11px; color:var(--t2); }
 .sw-hex  { font-size:10px; color:var(--t3); margin-top:2px; font-family:monospace; }
 .typo    { display:flex; flex-direction:column; gap:20px; }
 .ty-lbl  { font-size:10px; color:var(--t3); letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
@@ -408,27 +208,107 @@ body {
 </head>
 <body>
 
-<!-- HEADER -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <filter id="rough" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="4" seed="9" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="zone-blur" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="14"/>
+  </filter>
+  <filter id="wc" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="5"/>
+  </filter>
+
+  <symbol id="ghost" viewBox="0 0 40 52" overflow="visible">
+    <ellipse cx="20" cy="20" rx="16" ry="15" fill="rgba(210,225,255,0.09)" filter="url(#wc)"/>
+    <ellipse cx="19" cy="25" rx="11" ry="15" fill="rgba(210,225,255,0.06)" filter="url(#wc)"/>
+    <path d="M20,4 C9,4 3,12 3,24 C3,35 3,43 7,47 Q10.5,43.5 14,47 Q17,51 20,47 Q23,51 26,47 Q29.5,43.5 33,47 C37,43 37,35 37,24 C37,12 31,4 20,4 Z"
+      fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.70)" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/>
+    <ellipse cx="14" cy="23" rx="3.2" ry="3.6" fill="rgba(255,255,255,0.88)"/>
+    <ellipse cx="26" cy="23" rx="3.2" ry="3.6" fill="rgba(255,255,255,0.88)"/>
+    <ellipse cx="14.6" cy="23.8" rx="1.4" ry="1.6" fill="rgba(5,5,5,0.75)"/>
+    <ellipse cx="26.6" cy="23.8" rx="1.4" ry="1.6" fill="rgba(5,5,5,0.75)"/>
+    <path d="M17,32 Q20,30 23,32" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="0.9" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="ghost-b" viewBox="0 0 40 52" overflow="visible">
+    <ellipse cx="20" cy="20" rx="15" ry="14" fill="rgba(210,225,255,0.07)" filter="url(#wc)"/>
+    <path d="M20,4 C8.5,4 2.5,12 2.5,24 C2.5,35 2.5,43.5 6.5,47.5 Q10,44 13.5,47.5 Q17,51.5 20,47.5 Q23,51.5 26.5,47.5 Q30,44 33.5,47.5 C37.5,43.5 37.5,35 37.5,24 C37.5,12 31.5,4 20,4 Z"
+      fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.62)" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M11,22 Q14,20.5 17,22" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M23,22 Q26,20.5 29,22" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M16,31 Q20,29 24,31" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="ghost-c" viewBox="0 0 40 52" overflow="visible">
+    <ellipse cx="20" cy="20" rx="15" ry="14" fill="rgba(255,210,180,0.07)" filter="url(#wc)"/>
+    <path d="M20,4 C9,4 3,12 3,24 C3,35 3,43 7,47 Q10.5,43.5 14,47 Q17,51 20,47 Q23,51 26,47 Q29.5,43.5 33,47 C37,43 37,35 37,24 C37,12 31,4 20,4 Z"
+      fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.60)" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M10.5,19 L16.5,21.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M29.5,19 L23.5,21.5" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/>
+    <ellipse cx="14" cy="25" rx="3" ry="3.3" fill="rgba(255,255,255,0.85)"/>
+    <ellipse cx="26" cy="25" rx="3" ry="3.3" fill="rgba(255,255,255,0.85)"/>
+    <ellipse cx="14.5" cy="25.5" rx="1.3" ry="1.5" fill="rgba(5,5,5,0.75)"/>
+    <ellipse cx="26.5" cy="25.5" rx="1.3" ry="1.5" fill="rgba(5,5,5,0.75)"/>
+  </symbol>
+
+  <symbol id="pin-ghost" viewBox="0 0 28 38" overflow="visible">
+    <path d="M14,2 C7.5,2 2,7.5 2,14 C2,22 14,36 14,36 C14,36 26,22 26,14 C26,7.5 20.5,2 14,2 Z"
+      fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.68)" stroke-width="1.4" stroke-linejoin="round"/>
+    <ellipse cx="10.5" cy="13.5" rx="2" ry="2.3" fill="rgba(255,255,255,0.82)"/>
+    <ellipse cx="17.5" cy="13.5" rx="2" ry="2.3" fill="rgba(255,255,255,0.82)"/>
+    <ellipse cx="11" cy="14" rx="0.9" ry="1" fill="rgba(5,5,5,0.65)"/>
+    <ellipse cx="18" cy="14" rx="0.9" ry="1" fill="rgba(5,5,5,0.65)"/>
+  </symbol>
+
+  <symbol id="bone" viewBox="0 0 36 22" overflow="visible">
+    <line x1="9" y1="11" x2="27" y2="11" stroke="rgba(255,255,255,0.55)" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="5.5" cy="11" r="4.5" fill="none" stroke="rgba(255,255,255,0.52)" stroke-width="1.4"/>
+    <circle cx="30.5" cy="11" r="4.5" fill="none" stroke="rgba(255,255,255,0.52)" stroke-width="1.4"/>
+    <line x1="4" y1="9" x2="7" y2="13" stroke="rgba(255,255,255,0.16)" stroke-width="0.7"/>
+    <line x1="29" y1="9" x2="32" y2="13" stroke="rgba(255,255,255,0.16)" stroke-width="0.7"/>
+  </symbol>
+
+  <symbol id="skull" viewBox="0 0 28 30" overflow="visible">
+    <path d="M14,2 C7.5,2 3,7 3,13.5 C3,18 5.5,21.5 9,23 L9,27 L19,27 L19,23 C22.5,21.5 25,18 25,13.5 C25,7 20.5,2 14,2 Z"
+      fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.52)" stroke-width="1.2" stroke-linejoin="round"/>
+    <ellipse cx="10" cy="13.5" rx="2.8" ry="3.2" fill="rgba(5,5,5,0.6)"/>
+    <ellipse cx="18" cy="13.5" rx="2.8" ry="3.2" fill="rgba(5,5,5,0.6)"/>
+    <path d="M12.5,18.5 L14,21 L15.5,18.5" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" stroke-linejoin="round"/>
+    <line x1="11" y1="25" x2="11" y2="27" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+    <line x1="14" y1="25" x2="14" y2="27" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+    <line x1="17" y1="25" x2="17" y2="27" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+  </symbol>
+
+  <symbol id="rip" viewBox="0 0 32 38" overflow="visible">
+    <path d="M4,14 C4,7 8,2 16,2 C24,2 28,7 28,14 L28,36 L4,36 Z"
+      fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.48)" stroke-width="1.3" stroke-linejoin="round"/>
+    <text x="16" y="20" text-anchor="middle" font-size="5.5" font-family="serif" fill="rgba(255,255,255,0.42)" letter-spacing="0.5">R.I.P.</text>
+    <line x1="16" y1="3" x2="16" y2="11" stroke="rgba(255,255,255,0.3)" stroke-width="1.2"/>
+    <line x1="12" y1="6.5" x2="20" y2="6.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.2"/>
+    <line x1="2" y1="36" x2="30" y2="36" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"/>
+  </symbol>
+</defs>
+</svg>
+
 <header class="page-header">
   <h1>BOOMAP</h1>
   <div class="jp-sub">幽霊地図 · 感情の記録</div>
-  <div class="sub">Monochrome · Minimal · Hand-drawn</div>
+  <div class="sub">Emotional Sketch · Hand-drawn Layer · Minimal Map</div>
 </header>
 
-<!-- ══ ROW 1 — MAP + DROP ══ -->
 <div class="max-w"><div class="sec">主要畫面</div></div>
 <div class="phones-row">
 
-  <!-- ─── MAP ─── -->
+  <!-- MAP -->
   <div class="phone-wrap">
     <div class="phone">
-      <div class="status-bar">
-        <span class="time">9:41</span>
-        <span>●●● WiFi 🔋</span>
-      </div>
+      <div class="status-bar"><span class="time">9:41</span><span>●●● WiFi 🔋</span></div>
       <div class="screen-map">
         <div class="map-grid"></div>
-        <!-- roads -->
+        <div class="map-vignette"></div>
         <div class="road road-hm" style="top:40%;"></div>
         <div class="road road-h"  style="top:56%;"></div>
         <div class="road road-h"  style="top:27%;"></div>
@@ -436,239 +316,160 @@ body {
         <div class="road road-vm" style="left:42%;"></div>
         <div class="road road-v"  style="left:62%;"></div>
         <div class="road road-v"  style="left:24%;"></div>
-        <!-- zone circles -->
-        <div class="zone" style="width:160px;height:120px;top:34%;left:26%;transform:translate(-50%,-50%);"></div>
-        <div class="zone" style="width:90px;height:70px;top:58%;left:64%;transform:translate(-50%,-50%);opacity:0.5;"></div>
 
-        <!-- GREEN GHOST markers -->
+        <svg class="wc-zone" style="top:12%;left:4%;width:250px;height:210px;" viewBox="0 0 250 210">
+          <ellipse cx="115" cy="100" rx="105" ry="85" fill="rgba(200,218,255,0.042)" filter="url(#zone-blur)"/>
+          <ellipse cx="105" cy="95"  rx="78"  ry="62" fill="rgba(200,218,255,0.032)" filter="url(#zone-blur)"/>
+          <ellipse cx="125" cy="105" rx="55"  ry="44" fill="rgba(200,218,255,0.025)" filter="url(#zone-blur)"/>
+        </svg>
+        <svg class="wc-zone" style="top:50%;left:46%;width:140px;height:110px;" viewBox="0 0 140 110">
+          <ellipse cx="70" cy="55" rx="58" ry="46" fill="rgba(200,218,255,0.038)" filter="url(#zone-blur)"/>
+        </svg>
+
         <div class="mc float" style="top:22%;left:16%;--dur:3.2s;--d:0.2s;">
-          <span class="s s-md">👻</span>
+          <svg class="gh gh-md"><use href="#ghost"/></svg>
           <div class="mc-shadow" style="--dur:3.2s;--d:0.2s;"></div>
         </div>
         <div class="mc float" style="top:30%;left:26%;--dur:2.9s;--d:0.6s;">
-          <span class="s s-sm">👻</span>
-          <div class="mc-shadow" style="width:55%;--dur:2.9s;--d:0.6s;"></div>
+          <svg class="gh gh-sm"><use href="#ghost-b"/></svg>
+          <div class="mc-shadow" style="width:50%;--dur:2.9s;--d:0.6s;"></div>
         </div>
         <div class="mc float" style="top:38%;left:20%;--dur:3.6s;--d:0.9s;">
-          <span class="s s-xs">👻</span>
-          <div class="mc-shadow" style="width:50%;--dur:3.6s;--d:0.9s;"></div>
+          <svg class="gh gh-xs"><use href="#ghost"/></svg>
+          <div class="mc-shadow" style="width:42%;--dur:3.6s;--d:0.9s;"></div>
         </div>
-
-        <!-- PIN GHOST markers (location reports) -->
         <div class="mc float" style="top:48%;left:59%;--dur:4s;--d:0.5s;">
-          <span class="s s-pin-sm">📍</span>
-          <div class="mc-shadow" style="width:45%;--dur:4s;--d:0.5s;"></div>
+          <svg class="pg pg-sm"><use href="#pin-ghost"/></svg>
+          <div class="mc-shadow" style="width:38%;--dur:4s;--d:0.5s;"></div>
         </div>
         <div class="mc float" style="top:19%;left:60%;--dur:3.8s;--d:1s;">
-          <span class="s s-pin-xs">📍</span>
-          <div class="mc-shadow" style="width:38%;--dur:3.8s;--d:1s;"></div>
+          <svg class="pg pg-xs"><use href="#pin-ghost"/></svg>
+          <div class="mc-shadow" style="width:32%;--dur:3.8s;--d:1s;"></div>
         </div>
-
-        <!-- SKELETON markers (decay) -->
-        <div class="mc" style="top:62%;left:54%;opacity:0.5;">
-          <span class="s s-xs">💀</span>
+        <div class="mc" style="top:62%;left:54%;opacity:0.45;">
+          <svg class="bn bn-sm"><use href="#bone"/></svg>
         </div>
-        <div class="mc" style="top:66%;left:59%;opacity:0.35;">
-          <span class="s" style="width:20px;height:20px;">💀</span>
+        <div class="mc" style="top:66%;left:59%;opacity:0.30;">
+          <svg class="sk sk-sm"><use href="#skull"/></svg>
         </div>
-
-        <!-- RIP marker (historical) -->
-        <div class="mc" style="top:71%;left:36%;opacity:0.45;">
-          <span class="s s-rip-sm">🪦</span>
+        <div class="mc" style="top:71%;left:36%;opacity:0.40;">
+          <svg class="rp rp-sm"><use href="#rip"/></svg>
         </div>
-
-        <!-- FRIENDS -->
         <div class="friend float" style="top:31%;left:55%;--dur:3.5s;--d:0.4s;">
-          <span class="s s-sm">🔥</span>
+          <svg class="gh gh-sm"><use href="#ghost-c"/></svg>
           <div class="friend-lbl">阿星</div>
         </div>
         <div class="friend float" style="top:59%;left:45%;--dur:4.2s;--d:0.8s;">
-          <span class="s s-pin-xs">📍</span>
+          <svg class="pg pg-xs"><use href="#pin-ghost"/></svg>
           <div class="friend-lbl">小雨</div>
         </div>
-
-        <!-- USER -->
         <div class="user-pos" style="top:46%;left:43%;transform:translate(-50%,-50%);">
           <div class="user-ring"></div>
           <div class="user-ring user-ring2"></div>
-          <span class="s s-md float" style="--dur:2.5s;">👻</span>
+          <svg class="gh gh-md float" style="--dur:2.5s;"><use href="#ghost"/></svg>
           <div class="user-lbl">你</div>
         </div>
-
-        <!-- top bar -->
         <div class="map-top">
           <div class="search-bar">
-            <span class="s s-pin-xs" style="border-radius:40% 40% 45% 45%;">📍</span>
+            <svg class="pg pg-xs" style="opacity:0.6;"><use href="#pin-ghost"/></svg>
             搜尋地點
           </div>
           <div class="sq-btn">≡</div>
         </div>
-
-        <!-- info chips -->
         <div class="chip" style="top:116px;left:20px;display:flex;align-items:center;gap:8px;">
           <div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.5);animation:breathe 2s ease-in-out infinite;flex-shrink:0;"></div>
-          <span style="font-size:11px;color:var(--t2);letter-spacing:0.3px;">2 位朋友在線</span>
+          <span style="font-size:11px;color:var(--t2);">2 位朋友在線</span>
         </div>
         <div class="chip" style="top:116px;right:20px;text-align:center;">
-          <div class="chip-num">47</div>
-          <div class="chip-lbl">附近幽靈</div>
+          <div class="chip-num">47</div><div class="chip-lbl">附近幽靈</div>
         </div>
-
-        <!-- FAB -->
         <div class="fab">
-          <span class="s s-md floatF" style="--dur:3s;">👻</span>
+          <svg class="gh gh-md floatF" style="--dur:3s;"><use href="#ghost"/></svg>
         </div>
-
-        <!-- bottom nav -->
         <div class="bnav">
-          <div class="ni on">
-            <span class="s s-sm">👻</span>
-            <span class="nlbl">地圖</span>
-          </div>
-          <div class="ni">
-            <span class="s s-pin-sm">📍</span>
-            <span class="nlbl">留下</span>
-          </div>
-          <div class="ni">
-            <span class="s s-sm">💀</span>
-            <span class="nlbl">社群</span>
-          </div>
-          <div class="ni">
-            <span class="s s-rip-sm">🪦</span>
-            <span class="nlbl">我的</span>
-          </div>
+          <div class="ni on"><svg class="gh gh-xs"><use href="#ghost"/></svg><span class="nlbl">地圖</span></div>
+          <div class="ni"><svg class="pg pg-xs"><use href="#pin-ghost"/></svg><span class="nlbl">留下</span></div>
+          <div class="ni"><svg class="sk sk-sm"><use href="#skull"/></svg><span class="nlbl">社群</span></div>
+          <div class="ni"><svg class="rp rp-sm"><use href="#rip"/></svg><span class="nlbl">我的</span></div>
         </div>
       </div>
     </div>
     <div class="phone-label">Map</div>
   </div>
 
-  <!-- ─── DROP GHOST ─── -->
+  <!-- DROP -->
   <div class="phone-wrap">
     <div class="phone">
-      <div class="status-bar">
-        <span class="time">9:41</span>
-        <span>●●● WiFi 🔋</span>
-      </div>
+      <div class="status-bar"><span class="time">9:41</span><span>●●● WiFi 🔋</span></div>
       <div class="screen-drop">
         <div class="handle"></div>
-        <div class="drop-hdr">
-          <h2>留下幽靈</h2>
-          <p>匿名 · 安全 · 被記住</p>
-        </div>
+        <div class="drop-hdr"><h2>留下幽靈</h2><p>匿名 · 安全 · 被記住</p></div>
         <div class="drop-hero">
-          <span class="s s-hero float" style="--dur:2.8s;">👻</span>
+          <svg class="gh gh-hero float" style="--dur:2.8s;"><use href="#ghost"/></svg>
           <div class="drop-hero-lbl">放在這裡</div>
         </div>
         <div class="drop-body">
-
-          <!-- type selector -->
           <div>
             <div class="field-lbl">類型</div>
             <div class="type-grid">
-              <div class="type-chip sel">
-                <span class="s s-sm">👻</span>
-                <span class="tc-lbl">不安</span>
-              </div>
-              <div class="type-chip">
-                <span class="s s-sm">🔥</span>
-                <span class="tc-lbl">危險</span>
-              </div>
-              <div class="type-chip">
-                <span class="s s-sm">💀</span>
-                <span class="tc-lbl">低落</span>
-              </div>
-              <div class="type-chip">
-                <span class="s s-sm">🔥</span>
-                <span class="tc-lbl">憤怒</span>
-              </div>
-              <div class="type-chip">
-                <span class="s s-pin-sm">📍</span>
-                <span class="tc-lbl">監視</span>
-              </div>
+              <div class="type-chip sel"><svg class="gh gh-sm"><use href="#ghost"/></svg><span class="tc-lbl">不安</span></div>
+              <div class="type-chip"><svg class="gh gh-sm"><use href="#ghost-c"/></svg><span class="tc-lbl">危險</span></div>
+              <div class="type-chip"><svg class="sk sk-md"><use href="#skull"/></svg><span class="tc-lbl">低落</span></div>
+              <div class="type-chip"><svg class="gh gh-sm"><use href="#ghost-b"/></svg><span class="tc-lbl">憤怒</span></div>
+              <div class="type-chip"><svg class="pg pg-sm"><use href="#pin-ghost"/></svg><span class="tc-lbl">監視</span></div>
             </div>
           </div>
-
-          <!-- text -->
           <div>
             <div class="field-lbl">發生了什麼</div>
             <textarea class="textarea" placeholder="在這裡說出來..."></textarea>
             <div class="char-count">0 / 200</div>
           </div>
-
-          <!-- severity -->
           <div>
             <div class="field-lbl">嚴重程度</div>
             <div class="sev-row">
-              <div class="dot mid"></div>
-              <div class="dot mid"></div>
-              <div class="dot on"></div>
-              <div class="dot"></div>
-              <div class="dot"></div>
+              <div class="dot mid"></div><div class="dot mid"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
               <span class="sev-lbl">中等</span>
             </div>
           </div>
-
-          <!-- anonymous toggle -->
           <div class="toggle-row">
             <div class="tl">
-              <span class="s s-sm">👻</span>
-              <div class="ti-info">
-                <h4>匿名發佈</h4>
-                <p>沒有人知道是你</p>
-              </div>
+              <svg class="gh gh-sm"><use href="#ghost"/></svg>
+              <div class="ti-info"><h4>匿名發佈</h4><p>沒有人知道是你</p></div>
             </div>
             <div class="toggle"></div>
           </div>
-
           <div class="cta">留下幽靈</div>
         </div>
-
         <div class="bnav" style="position:relative;bottom:auto;left:auto;right:auto;margin:0 20px 20px;flex-shrink:0;">
-          <div class="ni"><span class="s s-sm">👻</span><span class="nlbl">地圖</span></div>
-          <div class="ni on"><span class="s s-pin-sm">📍</span><span class="nlbl">留下</span></div>
-          <div class="ni"><span class="s s-sm">💀</span><span class="nlbl">社群</span></div>
-          <div class="ni"><span class="s s-rip-sm">🪦</span><span class="nlbl">我的</span></div>
+          <div class="ni"><svg class="gh gh-xs"><use href="#ghost"/></svg><span class="nlbl">地圖</span></div>
+          <div class="ni on"><svg class="pg pg-xs"><use href="#pin-ghost"/></svg><span class="nlbl">留下</span></div>
+          <div class="ni"><svg class="sk sk-sm"><use href="#skull"/></svg><span class="nlbl">社群</span></div>
+          <div class="ni"><svg class="rp rp-sm"><use href="#rip"/></svg><span class="nlbl">我的</span></div>
         </div>
       </div>
     </div>
     <div class="phone-label">Drop Ghost</div>
   </div>
 
-</div><!-- /row 1 -->
+</div>
 
-<!-- ══ ROW 2 — COMMUNITY + PROFILE ══ -->
 <div class="phones-row">
 
-  <!-- ─── COMMUNITY ─── -->
+  <!-- COMMUNITY -->
   <div class="phone-wrap">
     <div class="phone">
-      <div class="status-bar">
-        <span class="time">9:41</span>
-        <span>●●● WiFi 🔋</span>
-      </div>
+      <div class="status-bar"><span class="time">9:41</span><span>●●● WiFi 🔋</span></div>
       <div class="screen-comm">
-        <div class="comm-hdr">
-          <h2>情緒空間</h2>
-          <div class="comm-jp">すべての感情は、ここに残る</div>
-        </div>
+        <div class="comm-hdr"><h2>情緒空間</h2><div class="comm-jp">すべての感情は、ここに残る</div></div>
         <div class="tabs">
-          <div class="tab on">全部</div>
-          <div class="tab">低落</div>
-          <div class="tab">疲憊</div>
-          <div class="tab">憤怒</div>
-          <div class="tab">空洞</div>
+          <div class="tab on">全部</div><div class="tab">低落</div><div class="tab">疲憊</div><div class="tab">憤怒</div><div class="tab">空洞</div>
         </div>
         <div class="feed">
-
           <div class="post">
             <div class="post-top">
               <div class="post-user">
-                <span class="s s-md float" style="--dur:3s;--d:0s;">👻</span>
-                <div>
-                  <div class="post-name">煙霧形態_07</div>
-                  <div class="post-loc">情緒碎片 · 無地點</div>
-                </div>
+                <svg class="gh gh-md float" style="--dur:3s;--d:0s;"><use href="#ghost"/></svg>
+                <div><div class="post-name">煙霧形態_07</div><div class="post-loc">情緒碎片 · 無地點</div></div>
               </div>
               <div class="post-time">8分前</div>
             </div>
@@ -676,21 +477,17 @@ body {
             <div class="post-tag">空洞</div>
             <div class="post-btm">
               <div class="reacts">
-                <div class="react"><span class="s s-xs">👻</span> 44</div>
-                <div class="react"><span class="s s-xs">💀</span> 31</div>
+                <div class="react"><svg class="gh gh-xs"><use href="#ghost"/></svg> 44</div>
+                <div class="react"><svg class="bn bn-xs"><use href="#bone"/></svg> 31</div>
               </div>
-              <span style="font-size:10px;color:var(--t3);letter-spacing:1px;">回應</span>
+              <span style="font-size:10px;color:var(--t3);">回應</span>
             </div>
           </div>
-
           <div class="post">
             <div class="post-top">
               <div class="post-user">
-                <span class="s s-md float" style="--dur:3.5s;--d:0.4s;">🔥</span>
-                <div>
-                  <div class="post-name">暗月碎片</div>
-                  <div class="post-loc">情緒碎片 · 無地點</div>
-                </div>
+                <svg class="gh gh-md float" style="--dur:3.5s;--d:0.4s;"><use href="#ghost-c"/></svg>
+                <div><div class="post-name">暗月碎片</div><div class="post-loc">情緒碎片 · 無地點</div></div>
               </div>
               <div class="post-time">42分前</div>
             </div>
@@ -698,21 +495,17 @@ body {
             <div class="post-tag">憤怒</div>
             <div class="post-btm">
               <div class="reacts">
-                <div class="react"><span class="s s-xs">👻</span> 67</div>
-                <div class="react"><span class="s s-xs">🔥</span> 38</div>
+                <div class="react"><svg class="gh gh-xs"><use href="#ghost"/></svg> 67</div>
+                <div class="react"><svg class="gh gh-xs"><use href="#ghost-c"/></svg> 38</div>
               </div>
-              <span style="font-size:10px;color:var(--t3);letter-spacing:1px;">回應</span>
+              <span style="font-size:10px;color:var(--t3);">回應</span>
             </div>
           </div>
-
           <div class="post">
             <div class="post-top">
               <div class="post-user">
-                <span class="s s-md float" style="--dur:4s;--d:0.8s;">💀</span>
-                <div>
-                  <div class="post-name">輕霧殘像</div>
-                  <div class="post-loc">情緒碎片 · 無地點</div>
-                </div>
+                <svg class="gh gh-md float" style="--dur:4s;--d:0.8s;"><use href="#ghost-b"/></svg>
+                <div><div class="post-name">輕霧殘像</div><div class="post-loc">情緒碎片 · 無地點</div></div>
               </div>
               <div class="post-time">2小時前</div>
             </div>
@@ -720,21 +513,17 @@ body {
             <div class="post-tag">疲憊</div>
             <div class="post-btm">
               <div class="reacts">
-                <div class="react"><span class="s s-xs">👻</span> 112</div>
-                <div class="react"><span class="s s-xs">💀</span> 89</div>
+                <div class="react"><svg class="gh gh-xs"><use href="#ghost"/></svg> 112</div>
+                <div class="react"><svg class="sk sk-sm"><use href="#skull"/></svg> 89</div>
               </div>
-              <span style="font-size:10px;color:var(--t3);letter-spacing:1px;">回應</span>
+              <span style="font-size:10px;color:var(--t3);">回應</span>
             </div>
           </div>
-
           <div class="post">
             <div class="post-top">
               <div class="post-user">
-                <span class="s s-rip-sm float" style="--dur:3.2s;--d:0.2s;">🪦</span>
-                <div>
-                  <div class="post-name">藍色煙霧</div>
-                  <div class="post-loc">情緒碎片 · 無地點</div>
-                </div>
+                <svg class="rp rp-md float" style="--dur:3.2s;--d:0.2s;"><use href="#rip"/></svg>
+                <div><div class="post-name">藍色煙霧</div><div class="post-loc">情緒碎片 · 無地點</div></div>
               </div>
               <div class="post-time">5小時前</div>
             </div>
@@ -742,36 +531,32 @@ body {
             <div class="post-tag">共鳴</div>
             <div class="post-btm">
               <div class="reacts">
-                <div class="react"><span class="s s-xs">👻</span> 89</div>
-                <div class="react"><span class="s s-xs">🔥</span> 52</div>
+                <div class="react"><svg class="gh gh-xs"><use href="#ghost"/></svg> 89</div>
+                <div class="react"><svg class="gh gh-xs"><use href="#ghost-c"/></svg> 52</div>
               </div>
-              <span style="font-size:10px;color:var(--t3);letter-spacing:1px;">回應</span>
+              <span style="font-size:10px;color:var(--t3);">回應</span>
             </div>
           </div>
-
-        </div><!-- /feed -->
+        </div>
         <div class="bnav">
-          <div class="ni"><span class="s s-sm">👻</span><span class="nlbl">地圖</span></div>
-          <div class="ni"><span class="s s-pin-sm">📍</span><span class="nlbl">留下</span></div>
-          <div class="ni on"><span class="s s-sm">💀</span><span class="nlbl">社群</span></div>
-          <div class="ni"><span class="s s-rip-sm">🪦</span><span class="nlbl">我的</span></div>
+          <div class="ni"><svg class="gh gh-xs"><use href="#ghost"/></svg><span class="nlbl">地圖</span></div>
+          <div class="ni"><svg class="pg pg-xs"><use href="#pin-ghost"/></svg><span class="nlbl">留下</span></div>
+          <div class="ni on"><svg class="sk sk-sm"><use href="#skull"/></svg><span class="nlbl">社群</span></div>
+          <div class="ni"><svg class="rp rp-sm"><use href="#rip"/></svg><span class="nlbl">我的</span></div>
         </div>
       </div>
     </div>
     <div class="phone-label">Community</div>
   </div>
 
-  <!-- ─── PROFILE ─── -->
+  <!-- PROFILE -->
   <div class="phone-wrap">
     <div class="phone">
-      <div class="status-bar">
-        <span class="time">9:41</span>
-        <span>●●● WiFi 🔋</span>
-      </div>
+      <div class="status-bar"><span class="time">9:41</span><span>●●● WiFi 🔋</span></div>
       <div class="screen-profile">
         <div class="p-hero">
           <div class="p-av-wrap">
-            <span class="s s-hero floatF" style="--dur:3s;">👻</span>
+            <svg class="gh gh-hero floatF" style="--dur:3s;"><use href="#ghost"/></svg>
             <div class="p-lv">Lv. 7</div>
           </div>
           <div class="p-name">幽靈_月光</div>
@@ -781,119 +566,76 @@ body {
             <div class="xp-track"><div class="xp-fill"></div></div>
           </div>
         </div>
-
         <div class="p-stats">
           <div class="pst"><div class="pst-num">34</div><div class="pst-lbl">幽靈</div></div>
           <div class="pst"><div class="pst-num">127</div><div class="pst-lbl">共鳴</div></div>
           <div class="pst"><div class="pst-num">8</div><div class="pst-lbl">徽章</div></div>
           <div class="pst"><div class="pst-num">12</div><div class="pst-lbl">守護</div></div>
         </div>
-
         <div class="p-scroll">
-          <!-- ghost skins -->
           <div class="p-sec">
-            <div class="p-sec-hdr">
-              <div class="p-sec-title">Ghost 造型</div>
-              <div class="p-sec-more">全部 →</div>
-            </div>
+            <div class="p-sec-hdr"><div class="p-sec-title">Ghost 造型</div><div class="p-sec-more">全部 →</div></div>
             <div class="skin-row">
-              <div class="skin on">
-                <span class="s s-md floatF" style="--dur:3s;">👻</span>
-                <div class="skin-name">月光幽靈</div>
-              </div>
-              <div class="skin">
-                <span class="s s-md floatF" style="--dur:3.5s;--d:0.3s;">💀</span>
-                <div class="skin-name">骷髏行者</div>
-              </div>
-              <div class="skin">
-                <span class="s s-md floatF" style="--dur:4s;--d:0.6s;">🔥</span>
-                <div class="skin-name">燃燒碎片</div>
-              </div>
-              <div class="skin off">
-                <span class="s s-rip-md">🪦</span>
-                <div class="skin-name">🔒 Lv.10</div>
-              </div>
+              <div class="skin on"><svg class="gh gh-md floatF" style="--dur:3s;"><use href="#ghost"/></svg><div class="skin-name">月光幽靈</div></div>
+              <div class="skin"><svg class="sk sk-md floatF" style="--dur:3.5s;--d:0.3s;"><use href="#skull"/></svg><div class="skin-name">骷髏行者</div></div>
+              <div class="skin"><svg class="gh gh-md floatF" style="--dur:4s;--d:0.6s;"><use href="#ghost-c"/></svg><div class="skin-name">燃燒碎片</div></div>
+              <div class="skin off"><svg class="rp rp-md"><use href="#rip"/></svg><div class="skin-name">🔒 Lv.10</div></div>
             </div>
           </div>
-
-          <!-- achievements -->
           <div class="p-sec">
-            <div class="p-sec-hdr">
-              <div class="p-sec-title">成就</div>
-              <div class="p-sec-more">全部 →</div>
-            </div>
+            <div class="p-sec-hdr"><div class="p-sec-title">成就</div><div class="p-sec-more">全部 →</div></div>
             <div class="ach-grid">
-              <div class="ach on"><span class="s s-sm">👻</span><div class="ach-name">第一個 Ghost</div></div>
-              <div class="ach on"><span class="s s-pin-sm">📍</span><div class="ach-name">探索者</div></div>
-              <div class="ach on"><span class="s s-sm">💀</span><div class="ach-name">共鳴達人</div></div>
-              <div class="ach on"><span class="s s-sm">🔥</span><div class="ach-name">夜行者</div></div>
-              <div class="ach"><span class="s s-rip-sm">🪦</span><div class="ach-name">守護者</div></div>
-              <div class="ach"><span class="s s-sm">👻</span><div class="ach-name">超級貢獻</div></div>
-              <div class="ach"><span class="s s-sm">💀</span><div class="ach-name">全台守護</div></div>
-              <div class="ach"><span class="s s-sm">🔥</span><div class="ach-name">Ghost 王</div></div>
+              <div class="ach on"><svg class="gh gh-sm"><use href="#ghost"/></svg><div class="ach-name">第一個 Ghost</div></div>
+              <div class="ach on"><svg class="pg pg-sm"><use href="#pin-ghost"/></svg><div class="ach-name">探索者</div></div>
+              <div class="ach on"><svg class="sk sk-sm"><use href="#skull"/></svg><div class="ach-name">共鳴達人</div></div>
+              <div class="ach on"><svg class="gh gh-sm"><use href="#ghost-c"/></svg><div class="ach-name">夜行者</div></div>
+              <div class="ach"><svg class="rp rp-sm"><use href="#rip"/></svg><div class="ach-name">守護者</div></div>
+              <div class="ach"><svg class="gh gh-sm"><use href="#ghost"/></svg><div class="ach-name">超級貢獻</div></div>
+              <div class="ach"><svg class="gh gh-sm"><use href="#ghost-b"/></svg><div class="ach-name">全台守護</div></div>
+              <div class="ach"><svg class="gh gh-sm"><use href="#ghost-c"/></svg><div class="ach-name">Ghost 王</div></div>
             </div>
           </div>
         </div>
-
         <div class="bnav">
-          <div class="ni"><span class="s s-sm">👻</span><span class="nlbl">地圖</span></div>
-          <div class="ni"><span class="s s-pin-sm">📍</span><span class="nlbl">留下</span></div>
-          <div class="ni"><span class="s s-sm">💀</span><span class="nlbl">社群</span></div>
-          <div class="ni on"><span class="s s-rip-sm">🪦</span><span class="nlbl">我的</span></div>
+          <div class="ni"><svg class="gh gh-xs"><use href="#ghost"/></svg><span class="nlbl">地圖</span></div>
+          <div class="ni"><svg class="pg pg-xs"><use href="#pin-ghost"/></svg><span class="nlbl">留下</span></div>
+          <div class="ni"><svg class="sk sk-sm"><use href="#skull"/></svg><span class="nlbl">社群</span></div>
+          <div class="ni on"><svg class="rp rp-sm"><use href="#rip"/></svg><span class="nlbl">我的</span></div>
         </div>
       </div>
     </div>
     <div class="phone-label">Profile</div>
   </div>
 
-</div><!-- /row 2 -->
+</div>
 
-<!-- ══ DESIGN SYSTEM ══ -->
 <div class="divider"></div>
 <div class="max-w">
   <div class="ds-panel">
     <h3>Character System · 角色圖鑑</h3>
     <div class="char-legend">
-      <div class="cl-item">
-        <span class="s s-lg float" style="--dur:3s;">👻</span>
-        <div class="cl-name">綠色幽靈<br>主要 Ghost<br>使用者頭像</div>
-      </div>
-      <div class="cl-item">
-        <span class="s s-pin-lg float" style="--dur:3.5s;--d:0.3s;">📍</span>
-        <div class="cl-name">藍色 Pin<br>地點標記<br>留下幽靈</div>
-      </div>
-      <div class="cl-item">
-        <span class="s s-lg float" style="--dur:4s;--d:0.6s;">💀</span>
-        <div class="cl-name">骷髏<br>衰退痕跡<br>舊回報</div>
-      </div>
-      <div class="cl-item">
-        <span class="s s-lg float" style="--dur:3.2s;--d:0.9s;">🔥</span>
-        <div class="cl-name">憤怒火焰<br>危險 / 憤怒<br>高嚴重度</div>
-      </div>
-      <div class="cl-item">
-        <span class="s s-rip-lg float" style="--dur:5s;--d:0.2s;">🪦</span>
-        <div class="cl-name">RIP 墓碑<br>歷史遺跡<br>個人頁</div>
-      </div>
+      <div class="cl-item"><svg class="gh gh-lg float" style="--dur:3s;"><use href="#ghost"/></svg><div class="cl-name">幽靈<br>主要角色</div></div>
+      <div class="cl-item"><svg class="gh gh-lg float" style="--dur:3.5s;--d:0.3s;"><use href="#ghost-b"/></svg><div class="cl-name">疲倦幽靈<br>低落 / 疲憊</div></div>
+      <div class="cl-item"><svg class="gh gh-lg float" style="--dur:3.2s;--d:0.6s;"><use href="#ghost-c"/></svg><div class="cl-name">憤怒幽靈<br>危險 / 憤怒</div></div>
+      <div class="cl-item"><svg class="pg pg-lg float" style="--dur:4s;--d:0.4s;"><use href="#pin-ghost"/></svg><div class="cl-name">Pin 幽靈<br>地點標記</div></div>
+      <div class="cl-item"><svg class="sk" style="width:44px;height:46px;display:inline-block;filter:url(#rough);"><use href="#skull"/></svg><div class="cl-name">骷髏<br>衰退痕跡</div></div>
+      <div class="cl-item"><svg class="bn" style="width:46px;height:28px;display:inline-block;filter:url(#rough);"><use href="#bone"/></svg><div class="cl-name">骨頭<br>消逝紀錄</div></div>
+      <div class="cl-item"><svg class="rp rp-lg"><use href="#rip"/></svg><div class="cl-name">RIP 墓碑<br>歷史遺跡</div></div>
     </div>
-
     <h3 style="margin-bottom:20px;">Color · Mono</h3>
     <div class="sw-row">
       <div class="sw"><div class="sw-c" style="background:#0A0A0A;border-bottom:1px solid rgba(255,255,255,0.04);"></div><div class="sw-info"><div class="sw-name">Black</div><div class="sw-hex">#0A0A0A · 底色</div></div></div>
       <div class="sw"><div class="sw-c" style="background:rgba(255,255,255,0.9);"></div><div class="sw-info"><div class="sw-name">White 90</div><div class="sw-hex">主文字</div></div></div>
       <div class="sw"><div class="sw-c" style="background:rgba(255,255,255,0.45);"></div><div class="sw-info"><div class="sw-name">White 45</div><div class="sw-hex">副文字</div></div></div>
+      <div class="sw"><div class="sw-c" style="background:rgba(210,225,255,0.10);"></div><div class="sw-info"><div class="sw-name">Ghost Blue</div><div class="sw-hex">水彩底層</div></div></div>
       <div class="sw"><div class="sw-c" style="background:rgba(255,255,255,0.07);"></div><div class="sw-info"><div class="sw-name">White 07</div><div class="sw-hex">分隔線</div></div></div>
     </div>
-
     <h3 style="margin-bottom:20px;">Typography</h3>
     <div class="typo">
-      <div><div class="ty-lbl">Display · 40px · weight 300 · tracking 14px</div>
-        <div style="font-size:40px;font-weight:300;letter-spacing:14px;color:rgba(255,255,255,0.85);">BOOMAP</div></div>
-      <div><div class="ty-lbl">Heading · 22px · weight 300 · tracking 2px</div>
-        <div style="font-size:22px;font-weight:300;letter-spacing:2px;">留下幽靈</div></div>
-      <div><div class="ty-lbl">Body · 13px · weight 300 · line-height 1.8</div>
-        <div style="font-size:13px;font-weight:300;line-height:1.8;color:rgba(255,255,255,0.45);">有時候覺得自己像地圖上那些慢慢消失的 ghost。明明留過痕跡，但沒人看見。</div></div>
-      <div><div class="ty-lbl">Serif JP · Noto Serif JP · 情緒點綴</div>
-        <div style="font-family:'Noto Serif JP';font-size:13px;font-weight:300;letter-spacing:2px;color:rgba(255,255,255,0.28);font-style:italic;">すべての感情は、ここに残る</div></div>
+      <div><div class="ty-lbl">Display · 40px · weight 300 · tracking 14px</div><div style="font-size:40px;font-weight:300;letter-spacing:14px;color:rgba(255,255,255,0.85);">BOOMAP</div></div>
+      <div><div class="ty-lbl">Heading · 22px · weight 300 · tracking 2px</div><div style="font-size:22px;font-weight:300;letter-spacing:2px;">留下幽靈</div></div>
+      <div><div class="ty-lbl">Body · 13px · weight 300 · line-height 1.8</div><div style="font-size:13px;font-weight:300;line-height:1.8;color:rgba(255,255,255,0.45);">有時候覺得自己像地圖上那些慢慢消失的 ghost。明明留過痕跡，但沒人看見。</div></div>
+      <div><div class="ty-lbl">Serif JP · 情緒點綴</div><div style="font-family:'Noto Serif JP';font-size:13px;font-weight:300;letter-spacing:2px;color:rgba(255,255,255,0.28);font-style:italic;">すべての感情は、ここに残る</div></div>
     </div>
   </div>
 </div>

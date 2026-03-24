@@ -3,1774 +3,762 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BooMap — UI Design System</title>
+<title>BooMap UI — Complete Screens</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Noto+Serif+JP:wght@300;400&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0A0A0A;--bg-deep:#070709;
+  --line:rgba(255,255,255,0.07);--line-active:rgba(255,255,255,0.28);
+  --surface:rgba(255,255,255,0.04);--surface-2:rgba(255,255,255,0.07);
+  --t1:rgba(255,255,255,0.90);--t2:rgba(255,255,255,0.45);
+  --t3:rgba(255,255,255,0.22);--t4:rgba(255,255,255,0.10);
+  --ghost-blue:rgba(210,225,255,0.10);--ghost-glow:rgba(210,225,255,0.18);
+}
+body{background:#080808;font-family:'Noto Sans JP',sans-serif;color:var(--t1);padding:48px 20px 120px;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* ── SVG Icons ── */
+.gh{display:inline-block;flex-shrink:0;overflow:visible;filter:url(#rough) drop-shadow(0 0 7px rgba(210,225,255,0.18));}
+.bn{display:inline-block;flex-shrink:0;overflow:visible;filter:url(#rough);}
+.pg{display:inline-block;flex-shrink:0;overflow:visible;filter:url(#rough) drop-shadow(0 0 5px rgba(210,225,255,0.14));}
+.rp{display:inline-block;flex-shrink:0;overflow:visible;filter:url(#rough);}
+.sk{display:inline-block;flex-shrink:0;overflow:visible;filter:url(#rough);}
+.gh-xs{width:20px;height:26px;}.gh-sm{width:28px;height:36px;}.gh-md{width:38px;height:48px;}.gh-lg{width:56px;height:70px;}.gh-hero{width:80px;height:100px;}
+.pg-xs{width:18px;height:26px;}.pg-sm{width:24px;height:34px;}.pg-lg{width:44px;height:60px;}
+.bn-xs{width:22px;height:14px;}.bn-sm{width:32px;height:20px;}
+.sk-sm{width:22px;height:24px;}.sk-md{width:30px;height:32px;}
+.rp-sm{width:22px;height:26px;}.rp-md{width:30px;height:36px;}.rp-lg{width:42px;height:50px;}
 
-  :root {
-    --bg: #0B0B0F;
-    --bg2: #0F0F16;
-    --surface: rgba(255,255,255,0.05);
-    --surface2: rgba(255,255,255,0.08);
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.12);
-    --blue-glow: #6B9FFF;
-    --purple-glow: #A78BFA;
-    --pink-glow: #F472B6;
-    --danger: rgba(180,60,80,0.6);
-    --text: rgba(255,255,255,0.92);
-    --text2: rgba(255,255,255,0.55);
-    --text3: rgba(255,255,255,0.3);
-    --accent: #8B9FFF;
-  }
+/* ── Animations ── */
+@keyframes drift{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg)}}
+@keyframes driftF{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes breathe{0%,100%{opacity:0.5}50%{opacity:1}}
+@keyframes rippleOut{0%{transform:scale(1);opacity:0.3}100%{transform:scale(2.8);opacity:0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.float{animation:drift var(--dur,3.2s) ease-in-out infinite;animation-delay:var(--d,0s);}
+.floatF{animation:driftF var(--dur,2.8s) ease-in-out infinite;animation-delay:var(--d,0s);}
 
-  body {
-    background: #0a0a10;
-    font-family: 'Inter', -apple-system, sans-serif;
-    color: var(--text);
-    min-height: 100vh;
-    padding: 40px 20px 80px;
-  }
+/* ── Page layout ── */
+.page-header{text-align:center;margin-bottom:80px;}
+.page-header h1{font-size:40px;font-weight:300;letter-spacing:14px;text-transform:uppercase;color:rgba(255,255,255,0.85);margin-bottom:8px;}
+.jp-sub{font-family:'Noto Serif JP';font-size:13px;color:var(--t3);letter-spacing:4px;}
+.sub{font-size:10px;color:var(--t3);letter-spacing:3px;text-transform:uppercase;margin-top:10px;}
+.sec{font-size:10px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:32px;}
+.phones-row{display:flex;gap:40px;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin-bottom:80px;}
+.phone-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;}
+.phone-label{font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;}
+.phone-note{font-size:10px;color:var(--t3);letter-spacing:0.5px;max-width:200px;text-align:center;line-height:1.6;}
+.divider{width:100%;height:1px;background:rgba(255,255,255,0.04);margin:60px 0;}
+.max-w{max-width:1080px;margin:0 auto;}
 
-  /* ── Page header ── */
-  .page-header {
-    text-align: center;
-    margin-bottom: 64px;
-  }
-  .page-header h1 {
-    font-size: 48px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #8B9FFF 0%, #C084FC 50%, #F472B6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -1px;
-    margin-bottom: 12px;
-  }
-  .page-header p {
-    color: var(--text2);
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-  }
+/* ── Phone frame ── */
+.phone{
+  width:390px;height:844px;background:var(--bg);
+  border-radius:52px;overflow:hidden;position:relative;
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 0 0 1px rgba(0,0,0,0.95),0 40px 100px rgba(0,0,0,0.9);
+  flex-shrink:0;
+}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:34px;background:var(--bg);border-radius:0 0 18px 18px;z-index:999;}
+.status-bar{position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 8px;z-index:100;font-size:11px;color:var(--t2);font-weight:300;}
+.status-bar .time{font-size:14px;font-weight:300;letter-spacing:1px;}
+.phone *::-webkit-scrollbar{display:none;}
 
-  /* ── Section labels ── */
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 24px;
-    padding-left: 4px;
-  }
+/* ── Bottom nav (shared) ── */
+.bnav{position:absolute;bottom:20px;left:20px;right:20px;height:68px;background:rgba(7,7,9,0.94);border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:space-around;z-index:100;backdrop-filter:blur(20px);}
+.ni{display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px 14px;}
+.ni .nlbl{font-size:10px;color:var(--t3);letter-spacing:0.5px;}
+.ni.on .nlbl{color:rgba(255,255,255,0.65);}
 
-  /* ── Phone frame ── */
-  .phones-row {
-    display: flex;
-    gap: 40px;
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    margin-bottom: 80px;
-  }
+/* ══════════════════════════════════════════
+   SCREEN 1 — ONBOARDING
+══════════════════════════════════════════ */
+.screen-onboard{width:100%;height:100%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden;position:relative;}
+.ob-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:20px;}
+.ob-tagline{font-size:15px;font-weight:300;color:var(--t2);line-height:1.9;text-align:center;letter-spacing:0.5px;padding:0 40px;}
+.ob-title{font-size:38px;font-weight:300;letter-spacing:12px;text-transform:uppercase;margin-bottom:10px;}
+.ob-jp{font-family:'Noto Serif JP';font-size:13px;color:var(--t3);letter-spacing:3px;margin-bottom:28px;}
+.ob-bottom{width:100%;padding:0 28px 52px;display:flex;flex-direction:column;gap:12px;flex-shrink:0;}
+.btn-primary{height:52px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.22);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:400;color:var(--t1);letter-spacing:3px;text-transform:uppercase;}
+.btn-ghost{height:44px;background:transparent;border:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t3);letter-spacing:1.5px;}
+.ob-dots{display:flex;gap:6px;justify-content:center;margin-bottom:24px;}
+.ob-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.2);}
+.ob-dot.on{width:16px;border-radius:2px;background:rgba(255,255,255,0.5);}
+.ob-ambient{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(200,215,255,0.05) 0%,transparent 70%);top:30%;left:50%;transform:translate(-50%,-50%);pointer-events:none;animation:breathe 4s ease-in-out infinite;}
 
-  .phone-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
-  .phone-label {
-    font-size: 12px;
-    color: var(--text3);
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
+/* ══════════════════════════════════════════
+   SCREEN 2 — MAP
+══════════════════════════════════════════ */
+.screen-map{width:100%;height:100%;position:relative;background:#070709;overflow:hidden;}
+#lmap{position:absolute;inset:0;z-index:0;}
+#lmap .leaflet-tile-pane{filter:brightness(0.72) saturate(0.5);}
+#lmap .leaflet-control-container{display:none;}
+.map-vignette{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(ellipse at 50% 60%,transparent 30%,rgba(6,6,8,0.45) 100%);}
+.wc-zone{position:absolute;pointer-events:none;z-index:4;overflow:visible;}
+.mc{position:absolute;display:flex;flex-direction:column;align-items:center;gap:2px;z-index:10;}
+.mc-shadow{width:55%;height:4px;border-radius:50%;background:rgba(0,0,0,0.5);filter:blur(2px);animation:breathe var(--dur,3.2s) ease-in-out infinite;animation-delay:var(--d,0s);}
+.user-pos{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:12;}
+.user-ring{position:absolute;width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,0.16);animation:rippleOut 2.8s ease-out infinite;}
+.user-ring2{animation-delay:1.4s;}
+.user-lbl{font-size:9px;color:var(--t3);letter-spacing:1px;}
+.friend{position:absolute;display:flex;flex-direction:column;align-items:center;gap:3px;z-index:11;}
+.friend-lbl{font-size:9px;color:var(--t3);background:rgba(0,0,0,0.72);padding:2px 7px;border-radius:8px;border:1px solid var(--line);white-space:nowrap;}
+.map-top{position:absolute;top:60px;left:20px;right:20px;display:flex;gap:10px;z-index:50;}
+.search-bar{flex:1;height:42px;background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:4px;display:flex;align-items:center;padding:0 14px;gap:8px;color:var(--t3);font-size:12px;}
+.sq-btn{width:42px;height:42px;background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:13px;}
+.chip{position:absolute;z-index:50;background:rgba(7,7,9,0.92);border:1px solid var(--line);border-radius:4px;padding:8px 12px;backdrop-filter:blur(12px);}
+.chip-num{font-size:18px;font-weight:300;color:rgba(255,255,255,0.8);}
+.chip-lbl{font-size:10px;color:var(--t3);margin-top:2px;letter-spacing:0.8px;}
+.fab{position:absolute;bottom:108px;left:50%;transform:translateX(-50%);width:62px;height:62px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);z-index:50;animation:breathe 3.5s ease-in-out infinite;}
 
-  .phone {
-    width: 390px;
-    height: 844px;
-    background: var(--bg);
-    border-radius: 52px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow:
-      0 0 0 1px rgba(0,0,0,0.8),
-      0 40px 120px rgba(0,0,0,0.8),
-      0 0 60px rgba(107,159,255,0.05);
-    flex-shrink: 0;
-  }
+/* ══════════════════════════════════════════
+   SCREEN 3 — DROP GHOST
+══════════════════════════════════════════ */
+.screen-drop{width:100%;height:100%;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;}
+.handle{width:32px;height:1px;background:rgba(255,255,255,0.12);margin:20px auto 0;flex-shrink:0;}
+.drop-hdr{padding:22px 28px 18px;flex-shrink:0;border-bottom:1px solid var(--line);}
+.drop-hdr h2{font-size:21px;font-weight:300;letter-spacing:2px;}
+.drop-hdr p{font-size:11px;color:var(--t3);margin-top:5px;letter-spacing:1px;font-style:italic;}
+.drop-hero{display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 0 10px;flex-shrink:0;}
+.drop-hero-lbl{font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;}
+.drop-body{flex:1;overflow-y:auto;padding:0 24px 16px;display:flex;flex-direction:column;gap:18px;}
+.field-lbl{font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.type-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+.type-chip{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border:1px solid rgba(255,255,255,0.07);border-radius:2px;}
+.type-chip.sel{border-color:var(--line-active);background:var(--surface);}
+.tc-lbl{font-size:9px;color:var(--t3);}
+.type-chip.sel .tc-lbl{color:rgba(255,255,255,0.6);}
+.textarea{background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.1);padding:12px 0;font-size:13px;font-weight:300;color:var(--t1);width:100%;min-height:76px;line-height:1.7;font-family:inherit;resize:none;outline:none;}
+.textarea::placeholder{color:var(--t3);}
+.char-count{font-size:10px;color:var(--t4);text-align:right;margin-top:4px;}
+.sev-row{display:flex;gap:10px;align-items:center;}
+.dot{width:9px;height:9px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);flex-shrink:0;}
+.dot.on{background:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.7);}
+.dot.mid{background:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.35);}
+.sev-lbl{font-size:11px;color:var(--t3);margin-left:4px;}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.tl{display:flex;align-items:center;gap:10px;}
+.ti-info h4{font-size:13px;font-weight:400;}
+.ti-info p{font-size:11px;color:var(--t3);margin-top:2px;}
+.toggle{width:40px;height:22px;border-radius:11px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);position:relative;}
+.toggle::after{content:'';position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.8);}
+.cta{height:52px;background:transparent;border:1px solid rgba(255,255,255,0.2);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:400;color:rgba(255,255,255,0.65);letter-spacing:2.5px;text-transform:uppercase;}
+.bnav-inline{position:relative;bottom:auto;left:auto;right:auto;margin:0 20px 20px;flex-shrink:0;height:68px;background:rgba(7,7,9,0.94);border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:space-around;}
 
-  /* notch */
-  .phone::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 120px; height: 34px;
-    background: #0B0B0F;
-    border-radius: 0 0 20px 20px;
-    z-index: 999;
-  }
+/* ══════════════════════════════════════════
+   SCREEN 4 — LOCATION DETAIL
+══════════════════════════════════════════ */
+.screen-detail{width:100%;height:100%;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;}
+.detail-map{width:100%;height:140px;background:#070709;position:relative;flex-shrink:0;}
+#dmap{position:absolute;inset:0;}
+#dmap .leaflet-tile-pane{filter:brightness(0.65) saturate(0.4);}
+#dmap .leaflet-control-container{display:none;}
+.detail-map-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(7,7,9,0.3) 0%,rgba(7,7,9,0.7) 100%);z-index:1;pointer-events:none;}
+.detail-hdr{position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 20px 10px;z-index:10;}
+.back-btn{font-size:12px;color:var(--t2);letter-spacing:1px;display:flex;align-items:center;gap:6px;}
+.type-badge{font-size:10px;color:var(--t2);background:rgba(7,7,9,0.85);border:1px solid var(--line);border-radius:4px;padding:4px 10px;letter-spacing:1.5px;text-transform:uppercase;}
+.detail-ghost{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);z-index:10;}
+.detail-body{flex:1;overflow-y:auto;padding:44px 24px 24px;display:flex;flex-direction:column;gap:18px;}
+.detail-text{font-size:15px;font-weight:300;line-height:1.85;color:var(--t1);letter-spacing:0.3px;}
+.detail-meta{display:flex;flex-direction:column;gap:6px;}
+.meta-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--t3);}
+.meta-dot{width:3px;height:3px;border-radius:50%;background:var(--t3);}
+.sev-row-inline{display:flex;gap:6px;align-items:center;}
+.detail-divider{height:1px;background:var(--line);}
+.reaction-row{display:flex;gap:12px;}
+.reaction-btn{flex:1;height:44px;background:var(--surface);border:1px solid var(--line);border-radius:4px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:var(--t2);letter-spacing:0.5px;}
+.reaction-btn.active{border-color:rgba(255,255,255,0.22);color:var(--t1);}
+.nearby-label{font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;}
+.nearby-scroll{display:flex;gap:12px;overflow-x:auto;padding:4px 0;scrollbar-width:none;}
+.nearby-item{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:4px;}
+.nearby-dist{font-size:9px;color:var(--t3);}
 
-  /* status bar */
-  .status-bar {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 54px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 0 28px 8px;
-    z-index: 100;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
-  }
-  .status-bar .time { font-size: 15px; font-weight: 600; }
-  .status-icons { display: flex; gap: 6px; align-items: center; }
+/* ══════════════════════════════════════════
+   SCREEN 5 — COMMUNITY
+══════════════════════════════════════════ */
+.screen-comm{width:100%;height:100%;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;}
+.comm-hdr{padding:60px 24px 14px;flex-shrink:0;border-bottom:1px solid var(--line);}
+.comm-hdr h2{font-size:24px;font-weight:300;letter-spacing:3px;}
+.comm-jp{font-family:'Noto Serif JP';font-size:11px;color:var(--t3);margin-top:6px;letter-spacing:1.5px;}
+.tabs{display:flex;padding:0 24px;flex-shrink:0;overflow-x:auto;border-bottom:1px solid var(--line);}
+.tab{padding:11px 16px;font-size:11px;color:var(--t3);letter-spacing:1px;white-space:nowrap;flex-shrink:0;border-bottom:1px solid transparent;margin-bottom:-1px;}
+.tab.on{color:rgba(255,255,255,0.72);border-bottom-color:rgba(255,255,255,0.38);}
+.feed{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.post{padding:18px 24px;border-bottom:1px solid var(--line);}
+.post-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.post-user{display:flex;align-items:center;gap:10px;}
+.post-name{font-size:13px;font-weight:400;}
+.post-loc{font-size:10px;color:var(--t3);margin-top:2px;}
+.post-time{font-size:10px;color:var(--t3);}
+.post-text{font-size:13px;line-height:1.8;color:var(--t2);font-weight:300;margin-bottom:10px;}
+.post-tag{font-size:10px;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.1);display:inline-block;padding-bottom:2px;}
+.post-btm{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+.reacts{display:flex;gap:14px;}
+.react{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3);}
 
-  /* ─────────────────────────────────────────
-     SCREEN 1 — MAP
-  ───────────────────────────────────────── */
-  .screen-map {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    background: #0B0B0F;
-    overflow: hidden;
-  }
+/* ══════════════════════════════════════════
+   SCREEN 6 — PROFILE
+══════════════════════════════════════════ */
+.screen-profile{width:100%;height:100%;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;}
+.p-hero{padding:54px 24px 22px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;border-bottom:1px solid var(--line);}
+.p-av-wrap{position:relative;margin-bottom:14px;}
+.p-lv{position:absolute;bottom:-4px;right:-10px;background:rgba(8,8,8,0.92);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:2px 7px;font-size:10px;font-weight:400;color:var(--t2);letter-spacing:1px;}
+.p-name{font-size:20px;font-weight:300;letter-spacing:3px;}
+.p-handle{font-size:11px;color:var(--t3);margin-top:4px;letter-spacing:1.5px;}
+.xp-wrap{width:180px;margin-top:14px;}
+.xp-top{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:5px;}
+.xp-track{height:1px;background:rgba(255,255,255,0.1);}
+.xp-fill{height:100%;width:68%;background:rgba(255,255,255,0.4);}
+.p-stats{display:flex;border-bottom:1px solid var(--line);flex-shrink:0;}
+.pst{flex:1;padding:16px 8px;text-align:center;border-right:1px solid var(--line);}
+.pst:last-child{border-right:none;}
+.pst-num{font-size:20px;font-weight:300;color:rgba(255,255,255,0.8);}
+.pst-lbl{font-size:10px;color:var(--t3);margin-top:3px;}
+.p-scroll{flex:1;overflow-y:auto;padding-bottom:100px;}
+.p-sec{padding:18px 24px;border-bottom:1px solid var(--line);}
+.p-sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.p-sec-title{font-size:10px;color:var(--t2);letter-spacing:2px;text-transform:uppercase;}
+.p-sec-more{font-size:10px;color:var(--t3);}
+.skin-row{display:flex;gap:10px;}
+.skin{flex:1;padding:12px 8px;border:1px solid rgba(255,255,255,0.07);border-radius:2px;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.skin.on{border-color:rgba(255,255,255,0.22);background:var(--surface);}
+.skin.off{opacity:0.28;}
+.skin-name{font-size:9px;color:var(--t3);}
+.skin.on .skin-name{color:rgba(255,255,255,0.45);}
+.ach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.ach{border:1px solid rgba(255,255,255,0.06);border-radius:2px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.ach.on{border-color:rgba(255,255,255,0.14);}
+.ach-name{font-size:9px;color:var(--t3);text-align:center;line-height:1.35;}
 
-  /* dark map background */
-  .map-bg {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 800px 600px at 60% 40%, rgba(50,40,80,0.25) 0%, transparent 70%),
-      radial-gradient(ellipse 400px 400px at 20% 70%, rgba(40,30,70,0.2) 0%, transparent 60%),
-      linear-gradient(180deg, #0B0B0F 0%, #0D0D16 100%);
-    overflow: hidden;
-  }
-
-  /* grid lines */
-  .map-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(107,159,255,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(107,159,255,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
-  /* roads */
-  .road {
-    position: absolute;
-    background: rgba(255,255,255,0.04);
-    border-radius: 2px;
-  }
-  .road-h { height: 2px; left: 0; right: 0; }
-  .road-v { width: 2px; top: 0; bottom: 0; }
-  .road-main { background: rgba(255,255,255,0.07); }
-
-  /* city light dots */
-  .city-dot {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(150,150,200,0.3);
-  }
-
-  /* danger zone aura */
-  .danger-zone {
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(180,60,80,0.18) 0%, rgba(120,40,60,0.08) 50%, transparent 70%);
-    pointer-events: none;
-  }
-
-  /* ghost markers */
-  .ghost-marker {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  .ghost-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--size, 22px);
-    filter: drop-shadow(0 0 6px var(--glow, rgba(139,159,255,0.6)));
-    opacity: var(--op, 0.75);
-    animation: ghostFloat var(--dur, 3s) ease-in-out infinite;
-    animation-delay: var(--delay, 0s);
-  }
-  @keyframes ghostFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-4px); }
-  }
-
-  /* user avatar */
-  .user-ghost {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-  .user-ghost-icon {
-    width: 44px; height: 44px;
-    background: radial-gradient(circle at 40% 35%, rgba(139,159,255,0.9), rgba(100,120,220,0.7));
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    box-shadow: 0 0 20px rgba(139,159,255,0.6), 0 0 40px rgba(139,159,255,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    border: 1.5px solid rgba(139,159,255,0.5);
-    animation: ghostFloat 2.5s ease-in-out infinite;
-  }
-  .user-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: #8B9FFF;
-    box-shadow: 0 0 8px rgba(139,159,255,0.8);
-  }
-
-  /* top bar */
-  .map-top-bar {
-    position: absolute;
-    top: 60px; left: 20px; right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    z-index: 50;
-  }
-  .search-pill {
-    flex: 1;
-    height: 44px;
-    background: rgba(255,255,255,0.06);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    gap: 8px;
-    color: var(--text3);
-    font-size: 14px;
-  }
-  .icon-btn {
-    width: 44px; height: 44px;
-    background: rgba(255,255,255,0.06);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-
-  /* center FAB */
-  .map-fab {
-    position: absolute;
-    bottom: 110px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 64px; height: 64px;
-    background: radial-gradient(circle at 40% 35%, rgba(139,159,255,0.35), rgba(80,60,150,0.25));
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(139,159,255,0.3);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    box-shadow:
-      0 0 20px rgba(139,159,255,0.25),
-      0 0 60px rgba(139,159,255,0.12),
-      inset 0 1px 0 rgba(255,255,255,0.15);
-    z-index: 50;
-    animation: fabPulse 3s ease-in-out infinite;
-  }
-  @keyframes fabPulse {
-    0%, 100% { box-shadow: 0 0 20px rgba(139,159,255,0.25), 0 0 60px rgba(139,159,255,0.12), inset 0 1px 0 rgba(255,255,255,0.15); }
-    50% { box-shadow: 0 0 30px rgba(139,159,255,0.4), 0 0 80px rgba(139,159,255,0.2), inset 0 1px 0 rgba(255,255,255,0.2); }
-  }
-
-  /* bottom nav */
-  .bottom-nav {
-    position: absolute;
-    bottom: 20px;
-    left: 20px; right: 20px;
-    height: 72px;
-    background: rgba(15,15,22,0.85);
-    backdrop-filter: blur(30px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    z-index: 100;
-    box-shadow: 0 4px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
-  }
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 16px;
-    border-radius: 16px;
-    transition: all 0.2s;
-  }
-  .nav-item.active { background: rgba(139,159,255,0.12); }
-  .nav-icon { font-size: 20px; }
-  .nav-label { font-size: 10px; font-weight: 500; color: var(--text3); letter-spacing: 0.5px; }
-  .nav-item.active .nav-label { color: #8B9FFF; }
-  .nav-item.active .nav-icon { filter: drop-shadow(0 0 6px rgba(139,159,255,0.7)); }
-
-  /* ghost count badge */
-  .ghost-count {
-    position: absolute;
-    top: 118px; right: 20px;
-    background: rgba(15,15,22,0.85);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 10px 14px;
-    z-index: 50;
-    text-align: center;
-  }
-  .ghost-count .num { font-size: 22px; font-weight: 700; color: #A78BFA; }
-  .ghost-count .lbl { font-size: 10px; color: var(--text3); letter-spacing: 0.5px; margin-top: 2px; }
-
-  /* ─────────────────────────────────────────
-     SCREEN 2 — DROP GHOST
-  ───────────────────────────────────────── */
-  .screen-drop {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    background: var(--bg);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .drop-bg {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 500px 500px at 50% -100px, rgba(100,80,180,0.15) 0%, transparent 70%),
-      radial-gradient(ellipse 300px 400px at 80% 80%, rgba(167,139,250,0.08) 0%, transparent 60%);
-  }
-
-  .drop-handle {
-    width: 36px; height: 4px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 2px;
-    margin: 14px auto 0;
-    flex-shrink: 0;
-  }
-
-  .drop-header {
-    padding: 20px 28px 0;
-    flex-shrink: 0;
-  }
-  .drop-header h2 {
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-  }
-  .drop-header p { font-size: 13px; color: var(--text2); margin-top: 4px; }
-
-  .drop-ghost-preview {
-    display: flex;
-    justify-content: center;
-    padding: 24px 0 16px;
-    flex-shrink: 0;
-  }
-  .drop-ghost-anim {
-    width: 80px; height: 80px;
-    background: radial-gradient(circle at 40% 35%, rgba(167,139,250,0.4), rgba(100,80,180,0.2));
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    box-shadow: 0 0 30px rgba(167,139,250,0.3), 0 0 60px rgba(167,139,250,0.15);
-    animation: ghostFloat 2.5s ease-in-out infinite;
-    border: 1px solid rgba(167,139,250,0.25);
-  }
-
-  .drop-content {
-    flex: 1;
-    padding: 0 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-bottom: 20px;
-  }
-
-  .drop-section-title {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 2px;
-  }
-
-  /* ghost type selector */
-  .type-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-  }
-  .type-chip {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 10px 4px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    cursor: pointer;
-  }
-  .type-chip.selected {
-    background: rgba(139,159,255,0.12);
-    border-color: rgba(139,159,255,0.35);
-    box-shadow: 0 0 12px rgba(139,159,255,0.15);
-  }
-  .type-chip .icon { font-size: 22px; }
-  .type-chip .name { font-size: 9px; color: var(--text3); font-weight: 500; letter-spacing: 0.3px; }
-  .type-chip.selected .name { color: #8B9FFF; }
-
-  /* text input */
-  .text-input-area {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    padding: 14px 16px;
-    font-size: 14px;
-    color: var(--text);
-    min-height: 80px;
-    line-height: 1.6;
-  }
-  .text-input-area .placeholder { color: var(--text3); }
-
-  /* severity slider */
-  .severity-track {
-    height: 6px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 3px;
-    position: relative;
-    margin: 8px 0 4px;
-  }
-  .severity-fill {
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 45%;
-    background: linear-gradient(90deg, rgba(139,159,255,0.5), rgba(180,60,80,0.6));
-    border-radius: 3px;
-  }
-  .severity-thumb {
-    position: absolute;
-    top: 50%; left: 45%;
-    transform: translate(-50%, -50%);
-    width: 20px; height: 20px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(139,159,255,0.5);
-  }
-  .severity-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 10px;
-    color: var(--text3);
-  }
-
-  /* anonymous toggle */
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-  }
-  .toggle-left { display: flex; align-items: center; gap: 10px; }
-  .toggle-left .icon { font-size: 18px; }
-  .toggle-info h4 { font-size: 13px; font-weight: 500; }
-  .toggle-info p { font-size: 11px; color: var(--text3); margin-top: 1px; }
-  .toggle-pill {
-    width: 44px; height: 26px;
-    background: rgba(139,159,255,0.3);
-    border-radius: 13px;
-    border: 1px solid rgba(139,159,255,0.4);
-    position: relative;
-  }
-  .toggle-pill::after {
-    content: '';
-    position: absolute;
-    top: 3px; right: 3px;
-    width: 18px; height: 18px;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 6px rgba(139,159,255,0.4);
-  }
-
-  /* drop CTA */
-  .drop-cta {
-    height: 54px;
-    background: linear-gradient(135deg, rgba(100,80,180,0.5), rgba(139,100,220,0.4));
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(167,139,250,0.3);
-    border-radius: 27px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.9);
-    box-shadow: 0 0 20px rgba(139,159,255,0.2), 0 0 40px rgba(139,159,255,0.1);
-    letter-spacing: 0.3px;
-  }
-
-  /* ─────────────────────────────────────────
-     SCREEN 3 — LOCATION DETAIL
-  ───────────────────────────────────────── */
-  .screen-detail {
-    width: 100%;
-    height: 100%;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .detail-bg {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 400px 300px at 50% 0%, rgba(180,60,80,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse 300px 400px at 10% 80%, rgba(100,80,180,0.08) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .detail-header {
-    padding: 64px 28px 20px;
-    position: relative;
-    flex-shrink: 0;
-  }
-  .detail-back {
-    width: 36px; height: 36px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-  .detail-location {
-    font-size: 13px;
-    color: var(--text3);
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-  }
-  .detail-name {
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    margin-bottom: 16px;
-    line-height: 1.2;
-  }
-
-  .detail-stats {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 4px;
-  }
-  .stat-card {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    padding: 14px 16px;
-    position: relative;
-    overflow: hidden;
-  }
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  }
-  .stat-num { font-size: 32px; font-weight: 700; line-height: 1; }
-  .stat-num.danger { color: rgba(240,100,120,0.9); text-shadow: 0 0 20px rgba(240,100,120,0.4); }
-  .stat-num.blue { color: rgba(139,159,255,0.9); text-shadow: 0 0 20px rgba(139,159,255,0.4); }
-  .stat-label { font-size: 11px; color: var(--text3); margin-top: 4px; font-weight: 500; letter-spacing: 0.3px; }
-
-  /* danger meter */
-  .danger-meter {
-    padding: 0 28px;
-    margin-bottom: 20px;
-    flex-shrink: 0;
-  }
-  .danger-bar-bg {
-    height: 8px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .danger-bar-fill {
-    height: 100%;
-    width: 65%;
-    background: linear-gradient(90deg, rgba(139,159,255,0.6), rgba(180,60,80,0.7));
-    border-radius: 4px;
-    position: relative;
-  }
-  .danger-bar-fill::after {
-    content: '';
-    position: absolute;
-    right: 0; top: 0; bottom: 0;
-    width: 20px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15));
-  }
-  .danger-meta { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--text3); }
-  .danger-meta .level { color: rgba(240,140,120,0.8); font-weight: 600; }
-
-  /* reports list */
-  .reports-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 20px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .report-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 20px;
-    padding: 14px 16px;
-    position: relative;
-    overflow: hidden;
-  }
-  .report-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  }
-  .report-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .report-type { display: flex; align-items: center; gap: 6px; }
-  .report-type-icon { font-size: 16px; }
-  .report-type-name { font-size: 12px; font-weight: 600; color: var(--text2); }
-  .report-badge {
-    padding: 3px 8px;
-    border-radius: 8px;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-  }
-  .badge-danger { background: rgba(180,60,80,0.2); color: rgba(240,120,120,0.9); border: 1px solid rgba(180,60,80,0.3); }
-  .badge-medium { background: rgba(167,139,250,0.15); color: rgba(167,139,250,0.9); border: 1px solid rgba(167,139,250,0.25); }
-  .badge-low { background: rgba(100,150,255,0.1); color: rgba(139,159,255,0.8); border: 1px solid rgba(139,159,255,0.2); }
-  .report-text { font-size: 13px; line-height: 1.55; color: var(--text2); }
-  .report-footer { display: flex; justify-content: space-between; margin-top: 8px; }
-  .report-time { font-size: 10px; color: var(--text3); }
-  .report-reactions { display: flex; gap: 4px; font-size: 12px; }
-
-  /* ─────────────────────────────────────────
-     SCREEN 4 — COMMUNITY
-  ───────────────────────────────────────── */
-  .screen-community {
-    width: 100%;
-    height: 100%;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .community-bg {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 600px 400px at 100% -50px, rgba(80,50,120,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse 400px 500px at -100px 60%, rgba(60,40,100,0.1) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .community-header {
-    padding: 60px 24px 16px;
-    flex-shrink: 0;
-    position: relative;
-  }
-  .community-header h2 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
-  .community-header p { font-size: 13px; color: var(--text3); margin-top: 4px; }
-
-  /* mood filter chips */
-  .mood-chips {
-    display: flex;
-    gap: 8px;
-    padding: 0 24px 16px;
-    overflow-x: auto;
-    flex-shrink: 0;
-    -webkit-overflow-scrolling: touch;
-  }
-  .mood-chips::-webkit-scrollbar { display: none; }
-  .mood-chip {
-    padding: 6px 14px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    font-size: 12px;
-    color: var(--text2);
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    flex-shrink: 0;
-  }
-  .mood-chip.active {
-    background: rgba(139,159,255,0.12);
-    border-color: rgba(139,159,255,0.3);
-    color: #8B9FFF;
-  }
-
-  /* feed */
-  .community-feed {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 16px 100px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .feed-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 24px;
-    padding: 16px;
-    position: relative;
-    overflow: hidden;
-  }
-  .feed-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  }
-  .feed-card-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  .feed-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .feed-avatar {
-    width: 36px; height: 36px;
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    border: 1px solid rgba(255,255,255,0.1);
-    flex-shrink: 0;
-  }
-  .avatar-blue { background: radial-gradient(circle at 40% 35%, rgba(100,130,255,0.6), rgba(60,80,180,0.4)); box-shadow: 0 0 12px rgba(100,130,255,0.3); }
-  .avatar-purple { background: radial-gradient(circle at 40% 35%, rgba(167,139,250,0.6), rgba(100,60,180,0.4)); box-shadow: 0 0 12px rgba(167,139,250,0.3); }
-  .avatar-pink { background: radial-gradient(circle at 40% 35%, rgba(244,114,182,0.6), rgba(180,60,120,0.4)); box-shadow: 0 0 12px rgba(244,114,182,0.3); }
-  .avatar-teal { background: radial-gradient(circle at 40% 35%, rgba(45,212,191,0.6), rgba(20,130,120,0.4)); box-shadow: 0 0 12px rgba(45,212,191,0.3); }
-
-  .feed-user-info .name { font-size: 13px; font-weight: 600; }
-  .feed-user-info .location { font-size: 11px; color: var(--text3); margin-top: 1px; }
-  .feed-time { font-size: 11px; color: var(--text3); }
-
-  .feed-text { font-size: 13px; line-height: 1.6; color: var(--text2); margin-bottom: 12px; }
-  .feed-tag {
-    display: inline-block;
-    padding: 3px 9px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 500;
-    margin-right: 6px;
-    margin-bottom: 8px;
-  }
-
-  .feed-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,0.05);
-  }
-  .feed-reactions { display: flex; gap: 12px; }
-  .feed-reaction {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    color: var(--text3);
-  }
-  .feed-reaction .emoji { font-size: 15px; }
-
-  /* ─────────────────────────────────────────
-     SCREEN 5 — PROFILE
-  ───────────────────────────────────────── */
-  .screen-profile {
-    width: 100%;
-    height: 100%;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .profile-bg {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 500px 400px at 50% -50px, rgba(100,80,180,0.2) 0%, transparent 60%),
-      radial-gradient(ellipse 300px 300px at 80% 90%, rgba(167,139,250,0.08) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .profile-hero {
-    padding: 54px 24px 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-shrink: 0;
-    position: relative;
-  }
-
-  .profile-avatar-wrap {
-    position: relative;
-    margin-bottom: 16px;
-  }
-  .profile-avatar-ring {
-    width: 96px; height: 96px;
-    border-radius: 50%;
-    background: conic-gradient(rgba(139,159,255,0.6), rgba(167,139,250,0.6), rgba(244,114,182,0.4), rgba(139,159,255,0.6));
-    padding: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 30px rgba(139,159,255,0.25);
-    animation: ringRotate 6s linear infinite;
-  }
-  @keyframes ringRotate {
-    from { background: conic-gradient(rgba(139,159,255,0.6), rgba(167,139,250,0.6), rgba(244,114,182,0.4), rgba(139,159,255,0.6)); }
-  }
-  .profile-avatar {
-    width: 90px; height: 90px;
-    background: radial-gradient(circle at 40% 35%, rgba(139,159,255,0.6), rgba(80,60,160,0.5));
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 44px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
-    animation: ghostFloat 3s ease-in-out infinite;
-    background-color: #0d0d18;
-  }
-  .profile-level-badge {
-    position: absolute;
-    bottom: -4px; right: -4px;
-    background: rgba(139,159,255,0.2);
-    border: 1px solid rgba(139,159,255,0.4);
-    border-radius: 10px;
-    padding: 2px 7px;
-    font-size: 11px;
-    font-weight: 700;
-    color: #8B9FFF;
-    backdrop-filter: blur(8px);
-  }
-
-  .profile-name { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
-  .profile-handle { font-size: 13px; color: var(--text3); margin-top: 2px; }
-
-  .profile-xp-bar {
-    width: 100%;
-    max-width: 200px;
-    margin-top: 14px;
-  }
-  .xp-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text3); margin-bottom: 5px; }
-  .xp-track {
-    height: 4px;
-    background: rgba(255,255,255,0.07);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .xp-fill {
-    height: 100%;
-    width: 68%;
-    background: linear-gradient(90deg, rgba(139,159,255,0.7), rgba(167,139,250,0.7));
-    border-radius: 2px;
-  }
-
-  /* stats row */
-  .profile-stats {
-    display: flex;
-    gap: 10px;
-    padding: 0 20px;
-    margin-bottom: 20px;
-    flex-shrink: 0;
-  }
-  .pstat {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 18px;
-    padding: 12px 10px;
-    text-align: center;
-  }
-  .pstat-num { font-size: 20px; font-weight: 700; color: #A78BFA; }
-  .pstat-label { font-size: 10px; color: var(--text3); margin-top: 2px; letter-spacing: 0.3px; }
-
-  /* skins section */
-  .skins-section {
-    padding: 0 20px;
-    flex-shrink: 0;
-    margin-bottom: 20px;
-  }
-  .skins-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .skins-header h3 { font-size: 15px; font-weight: 600; }
-  .skins-see-all { font-size: 12px; color: #8B9FFF; }
-  .skins-row { display: flex; gap: 10px; }
-  .skin-item {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 20px;
-    padding: 12px 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-  .skin-item.active {
-    background: rgba(139,159,255,0.1);
-    border-color: rgba(139,159,255,0.3);
-    box-shadow: 0 0 16px rgba(139,159,255,0.1);
-  }
-  .skin-item.locked { opacity: 0.4; }
-  .skin-icon { font-size: 28px; filter: drop-shadow(0 0 6px rgba(167,139,250,0.5)); }
-  .skin-name { font-size: 10px; color: var(--text3); font-weight: 500; }
-  .skin-item.active .skin-name { color: #8B9FFF; }
-
-  /* achievements */
-  .achievements-section {
-    flex: 1;
-    padding: 0 20px;
-    overflow-y: auto;
-    padding-bottom: 100px;
-  }
-  .ach-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
-  .ach-header h3 { font-size: 15px; font-weight: 600; }
-  .ach-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .ach-item {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 16px;
-    padding: 10px 6px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-  .ach-item.earned { border-color: rgba(167,139,250,0.25); background: rgba(167,139,250,0.08); }
-  .ach-icon { font-size: 22px; }
-  .ach-name { font-size: 9px; color: var(--text3); text-align: center; line-height: 1.3; font-weight: 500; }
-  .ach-item.earned .ach-name { color: rgba(167,139,250,0.7); }
-
-  /* ─────────────────────────────────────────
-     DESIGN TOKENS SECTION
-  ───────────────────────────────────────── */
-  .tokens-section {
-    max-width: 900px;
-    margin: 0 auto 80px;
-  }
-  .tokens-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-  .token-swatch {
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.06);
-  }
-  .swatch-color { height: 64px; }
-  .swatch-info { padding: 10px 12px; background: rgba(255,255,255,0.03); }
-  .swatch-name { font-size: 12px; font-weight: 600; }
-  .swatch-hex { font-size: 10px; color: var(--text3); margin-top: 2px; font-family: monospace; }
-
-  /* typography showcase */
-  .typo-showcase {
-    max-width: 900px;
-    margin: 0 auto 80px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 24px;
-    padding: 32px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-  .typo-item .label { font-size: 10px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
-
-  /* ─────────────────────────────────────────
-     UTILITY
-  ───────────────────────────────────────── */
-  .divider {
-    width: 100%;
-    height: 1px;
-    background: rgba(255,255,255,0.05);
-    margin: 60px 0;
-  }
-  .max-w { max-width: 900px; margin: 0 auto; }
-
-  /* scrollbar hide for phone screens */
-  .phone *::-webkit-scrollbar { display: none; }
-
-  /* glow text */
-  .glow-blue { color: #8B9FFF; text-shadow: 0 0 12px rgba(139,159,255,0.5); }
-  .glow-purple { color: #A78BFA; text-shadow: 0 0 12px rgba(167,139,250,0.5); }
-
+/* ── Design System ── */
+.ds-panel{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:4px;padding:40px;margin-bottom:40px;}
+.ds-panel h3{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:28px;}
+.char-legend{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:40px;align-items:flex-end;}
+.cl-item{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.cl-name{font-size:10px;color:var(--t3);text-align:center;line-height:1.6;}
+.sw-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;}
+.sw{border-radius:2px;overflow:hidden;border:1px solid rgba(255,255,255,0.05);width:130px;}
+.sw-c{height:48px;}
+.sw-info{padding:8px 10px;background:rgba(255,255,255,0.02);}
+.sw-name{font-size:11px;color:var(--t2);}
+.sw-hex{font-size:10px;color:var(--t3);margin-top:2px;font-family:monospace;}
+.typo{display:flex;flex-direction:column;gap:20px;}
+.ty-lbl{font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════
-     PAGE HEADER
-══════════════════════════════════════ -->
+<!-- SVG DEFS — inline for same-document <use> references -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <filter id="rough" x="-15%" y="-15%" width="130%" height="130%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="4" seed="9" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="wc" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5"/></filter>
+  <filter id="zone-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+
+  <symbol id="ghost" viewBox="0 0 40 52" overflow="visible">
+    <ellipse cx="20" cy="20" rx="16" ry="15" fill="rgba(210,225,255,0.09)" filter="url(#wc)"/>
+    <ellipse cx="19" cy="25" rx="11" ry="15" fill="rgba(210,225,255,0.06)" filter="url(#wc)"/>
+    <path d="M20,4 C9,4 3,12 3,24 C3,35 3,43 7,47 Q10.5,43.5 14,47 Q17,51 20,47 Q23,51 26,47 Q29.5,43.5 33,47 C37,43 37,35 37,24 C37,12 31,4 20,4 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.70)" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/>
+    <ellipse cx="14" cy="23" rx="3.2" ry="3.6" fill="rgba(255,255,255,0.88)"/>
+    <ellipse cx="26" cy="23" rx="3.2" ry="3.6" fill="rgba(255,255,255,0.88)"/>
+    <ellipse cx="14.6" cy="23.8" rx="1.4" ry="1.6" fill="rgba(5,5,5,0.75)"/>
+    <ellipse cx="26.6" cy="23.8" rx="1.4" ry="1.6" fill="rgba(5,5,5,0.75)"/>
+    <path d="M17,32 Q20,30 23,32" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="0.9" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ghost-b" viewBox="0 0 40 52" overflow="visible">
+    <ellipse cx="20" cy="20" rx="15" ry="14" fill="rgba(210,225,255,0.07)" filter="url(#wc)"/>
+    <path d="M20,4 C8.5,4 2.5,12 2.5,24 C2.5,35 2.5,43.5 6.5,47.5 Q10,44 13.5,47.5 Q17,51.5 20,47.5 Q23,51.5 26.5,47.5 Q30,44 33.5,47.5 C37.5,43.5 37.5,35 37.5,24 C37.5,12 31.5,4 20,4 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.62)" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M11,22 Q14,20.5 17,22" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M23,22 Q26,20.5 29,22" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M16,31 Q20,29 24,31" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="0.8" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ghost-c" viewBox="0 0 40 52" overflow="visible">
+    <ellipse cx="20" cy="20" rx="15" ry="14" fill="rgba(255,210,180,0.07)" filter="url(#wc)"/>
+    <path d="M20,4 C9,4 3,12 3,24 C3,35 3,43 7,47 Q10.5,43.5 14,47 Q17,51 20,47 Q23,51 26,47 Q29.5,43.5 33,47 C37,43 37,35 37,24 C37,12 31,4 20,4 Z" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.60)" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M10.5,19 L16.5,21.5" stroke="rgba(255,255,255,0.70)" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M29.5,19 L23.5,21.5" stroke="rgba(255,255,255,0.70)" stroke-width="1.2" stroke-linecap="round"/>
+    <ellipse cx="14" cy="25" rx="3" ry="3.3" fill="rgba(255,255,255,0.85)"/>
+    <ellipse cx="26" cy="25" rx="3" ry="3.3" fill="rgba(255,255,255,0.85)"/>
+    <ellipse cx="14.5" cy="25.5" rx="1.3" ry="1.5" fill="rgba(5,5,5,0.75)"/>
+    <ellipse cx="26.5" cy="25.5" rx="1.3" ry="1.5" fill="rgba(5,5,5,0.75)"/>
+  </symbol>
+  <symbol id="pin-ghost" viewBox="0 0 28 38" overflow="visible">
+    <path d="M14,2 C7.5,2 2,7.5 2,14 C2,22 14,36 14,36 C14,36 26,22 26,14 C26,7.5 20.5,2 14,2 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.68)" stroke-width="1.4" stroke-linejoin="round"/>
+    <ellipse cx="10.5" cy="13.5" rx="2" ry="2.3" fill="rgba(255,255,255,0.82)"/>
+    <ellipse cx="17.5" cy="13.5" rx="2" ry="2.3" fill="rgba(255,255,255,0.82)"/>
+    <ellipse cx="11" cy="14" rx="0.9" ry="1" fill="rgba(5,5,5,0.65)"/>
+    <ellipse cx="18" cy="14" rx="0.9" ry="1" fill="rgba(5,5,5,0.65)"/>
+  </symbol>
+  <symbol id="bone" viewBox="0 0 36 22" overflow="visible">
+    <line x1="9" y1="11" x2="27" y2="11" stroke="rgba(255,255,255,0.55)" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="5.5" cy="11" r="4.5" fill="none" stroke="rgba(255,255,255,0.52)" stroke-width="1.4"/>
+    <circle cx="30.5" cy="11" r="4.5" fill="none" stroke="rgba(255,255,255,0.52)" stroke-width="1.4"/>
+    <line x1="4" y1="9" x2="7" y2="13" stroke="rgba(255,255,255,0.16)" stroke-width="0.7"/>
+    <line x1="29" y1="9" x2="32" y2="13" stroke="rgba(255,255,255,0.16)" stroke-width="0.7"/>
+  </symbol>
+  <symbol id="skull" viewBox="0 0 28 30" overflow="visible">
+    <path d="M14,2 C7.5,2 3,7 3,13.5 C3,18 5.5,21.5 9,23 L9,27 L19,27 L19,23 C22.5,21.5 25,18 25,13.5 C25,7 20.5,2 14,2 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.52)" stroke-width="1.2" stroke-linejoin="round"/>
+    <ellipse cx="10" cy="13.5" rx="2.8" ry="3.2" fill="rgba(5,5,5,0.60)"/>
+    <ellipse cx="18" cy="13.5" rx="2.8" ry="3.2" fill="rgba(5,5,5,0.60)"/>
+    <path d="M12.5,18.5 L14,21 L15.5,18.5" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="0.8" stroke-linejoin="round"/>
+    <line x1="11" y1="25" x2="11" y2="27" stroke="rgba(0,0,0,0.50)" stroke-width="1"/>
+    <line x1="14" y1="25" x2="14" y2="27" stroke="rgba(0,0,0,0.50)" stroke-width="1"/>
+    <line x1="17" y1="25" x2="17" y2="27" stroke="rgba(0,0,0,0.50)" stroke-width="1"/>
+  </symbol>
+  <symbol id="rip" viewBox="0 0 32 38" overflow="visible">
+    <path d="M4,14 C4,7 8,2 16,2 C24,2 28,7 28,14 L28,36 L4,36 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.48)" stroke-width="1.3" stroke-linejoin="round"/>
+    <text x="16" y="20" text-anchor="middle" font-size="5.5" font-family="serif" fill="rgba(255,255,255,0.42)" letter-spacing="0.5">R.I.P.</text>
+    <line x1="16" y1="3" x2="16" y2="11" stroke="rgba(255,255,255,0.30)" stroke-width="1.2"/>
+    <line x1="12" y1="6.5" x2="20" y2="6.5" stroke="rgba(255,255,255,0.30)" stroke-width="1.2"/>
+    <line x1="2" y1="36" x2="30" y2="36" stroke="rgba(255,255,255,0.25)" stroke-width="1.2"/>
+  </symbol>
+</defs>
+</svg>
+
+<!-- ════════════ HEADER ════════════ -->
 <header class="page-header">
-  <h1>👻 BooMap</h1>
-  <p>High-Fidelity UI Design System · iOS Dark Mode · Glassmorphism · Spooky but Cute</p>
+  <h1>BOOMAP</h1>
+  <div class="jp-sub">幽霊地図 · 感情の記録</div>
+  <div class="sub">UI Design Spec · Emotional Sketch · v1.0</div>
 </header>
 
-<!-- ══════════════════════════════════════
-     ROW 1 — MAP + DROP GHOST
-══════════════════════════════════════ -->
-<div class="max-w">
-  <div class="section-label">Core Screens</div>
+<!-- ════ ROW 1 — ONBOARDING ════ -->
+<div class="max-w"><div class="sec">01 · Onboarding</div></div>
+<div class="phones-row">
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="screen-onboard">
+        <div class="ob-ambient"></div>
+        <div class="ob-top">
+          <img src="assets/舉手鬼.png" class="gh float" style="width:80px;height:100px;--dur:3s;margin-bottom:28px;object-fit:contain;" alt="ghost">
+          <div class="ob-title">BOOMAP</div>
+          <div class="ob-jp">幽霊地図</div>
+          <div class="ob-dots">
+            <div class="ob-dot on"></div>
+            <div class="ob-dot"></div>
+            <div class="ob-dot"></div>
+          </div>
+          <div class="ob-tagline">分享你的不安<br>讓地圖記住這座城市的情緒</div>
+        </div>
+        <div class="ob-bottom">
+          <div class="btn-primary">開始探索</div>
+          <div class="btn-ghost">我已有帳號 →</div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">Onboarding</div>
+    <div class="phone-note">第一次開啟 App，引導使用者進入</div>
+  </div>
+
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="screen-onboard">
+        <div class="ob-ambient" style="background:radial-gradient(circle,rgba(200,215,255,0.06) 0%,transparent 70%);top:35%;"></div>
+        <div class="ob-top">
+          <img src="assets/小鬼.png" class="pg float" style="width:60px;height:84px;--dur:3.5s;margin-bottom:28px;object-fit:contain;" alt="pin-ghost">
+          <div class="ob-title" style="font-size:28px;letter-spacing:8px;">定位情緒</div>
+          <div class="ob-jp" style="margin-bottom:28px;">あなたの場所で、感情を残す</div>
+          <div class="ob-dots">
+            <div class="ob-dot"></div>
+            <div class="ob-dot on"></div>
+            <div class="ob-dot"></div>
+          </div>
+          <div class="ob-tagline">在你所在的地方<br>留下一個幽靈<br>讓情緒成為地圖的一部分</div>
+        </div>
+        <div class="ob-bottom">
+          <div class="btn-primary">下一步</div>
+          <div class="btn-ghost">跳過</div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">Onboarding 2</div>
+    <div class="phone-note">說明核心功能</div>
+  </div>
+
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="screen-onboard">
+        <div class="ob-ambient" style="opacity:0.6;top:38%;"></div>
+        <div class="ob-top">
+          <div style="display:flex;gap:12px;margin-bottom:28px;">
+            <img src="assets/舉手鬼.png" class="gh float" style="width:36px;height:46px;--dur:3.2s;--d:0s;object-fit:contain;" alt="ghost">
+            <img src="assets/走路鬼.png" class="gh float" style="width:46px;height:58px;--dur:2.8s;--d:0.4s;object-fit:contain;" alt="ghost-b">
+            <img src="assets/小鬼.png" class="gh float" style="width:36px;height:46px;--dur:3.6s;--d:0.8s;object-fit:contain;" alt="ghost-c">
+          </div>
+          <div class="ob-title" style="font-size:26px;letter-spacing:6px;">不孤單</div>
+          <div class="ob-jp" style="margin-bottom:28px;">みんなの感情が、ここにある</div>
+          <div class="ob-dots">
+            <div class="ob-dot"></div>
+            <div class="ob-dot"></div>
+            <div class="ob-dot on"></div>
+          </div>
+          <div class="ob-tagline">看見別人留下的情緒<br>知道你不是一個人</div>
+        </div>
+        <div class="ob-bottom">
+          <div class="btn-primary" style="background:rgba(255,255,255,0.10);border-color:rgba(255,255,255,0.30);">進入地圖</div>
+          <div class="btn-ghost">我已有帳號 →</div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">Onboarding 3</div>
+    <div class="phone-note">完成引導，進入 App</div>
+  </div>
 </div>
 
+<!-- ════ ROW 2 — MAP + DROP ════ -->
+<div class="max-w"><div class="sec">02 · Map  ·  03 · Drop Ghost</div></div>
 <div class="phones-row">
 
-  <!-- ── PHONE 1: MAP ── -->
+  <!-- MAP -->
   <div class="phone-wrap">
     <div class="phone">
-      <div class="status-bar">
-        <span class="time">9:41</span>
-        <div class="status-icons">
-          <span>●●●</span>
-          <span>WiFi</span>
-          <span>🔋</span>
-        </div>
-      </div>
-
+      <div class="status-bar"><span class="time">9:41</span><span>●●● WiFi 🔋</span></div>
       <div class="screen-map">
-        <!-- map background -->
-        <div class="map-bg">
-          <div class="map-grid"></div>
-
-          <!-- roads -->
-          <div class="road road-h road-main" style="top:38%;"></div>
-          <div class="road road-h" style="top:52%;"></div>
-          <div class="road road-h" style="top:65%;"></div>
-          <div class="road road-h" style="top:25%;"></div>
-          <div class="road road-v road-main" style="left:40%;"></div>
-          <div class="road road-v" style="left:60%;"></div>
-          <div class="road road-v" style="left:25%;"></div>
-          <div class="road road-v" style="left:72%;"></div>
-
-          <!-- city dots -->
-          <div class="city-dot" style="width:3px;height:3px;top:30%;left:45%;opacity:0.5;"></div>
-          <div class="city-dot" style="width:2px;height:2px;top:55%;left:28%;opacity:0.4;"></div>
-          <div class="city-dot" style="width:2px;height:2px;top:44%;left:67%;opacity:0.3;"></div>
-          <div class="city-dot" style="width:4px;height:4px;top:62%;left:55%;opacity:0.4;"></div>
-          <div class="city-dot" style="width:2px;height:2px;top:70%;left:38%;opacity:0.3;"></div>
-          <div class="city-dot" style="width:3px;height:3px;top:22%;left:58%;opacity:0.4;"></div>
+        <div id="lmap"></div>
+        <div class="map-vignette"></div>
+        <svg class="wc-zone" style="top:12%;left:4%;width:250px;height:210px;" viewBox="0 0 250 210">
+          <ellipse cx="115" cy="100" rx="105" ry="85" fill="rgba(200,218,255,0.042)" filter="url(#zone-blur)"/>
+          <ellipse cx="105" cy="95" rx="78" ry="62" fill="rgba(200,218,255,0.030)" filter="url(#zone-blur)"/>
+        </svg>
+        <svg class="wc-zone" style="top:50%;left:46%;width:140px;height:110px;" viewBox="0 0 140 110">
+          <ellipse cx="70" cy="55" rx="58" ry="46" fill="rgba(200,218,255,0.036)" filter="url(#zone-blur)"/>
+        </svg>
+        <div class="mc float" style="top:22%;left:16%;--dur:3.2s;--d:0.2s;"><img src="assets/舉手鬼.png" class="gh gh-md" style="object-fit:contain;" alt="ghost"><div class="mc-shadow" style="--dur:3.2s;--d:0.2s;"></div></div>
+        <div class="mc float" style="top:30%;left:26%;--dur:2.9s;--d:0.6s;"><img src="assets/走路鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost-b"><div class="mc-shadow" style="width:50%;--dur:2.9s;--d:0.6s;"></div></div>
+        <div class="mc float" style="top:38%;left:20%;--dur:3.6s;--d:0.9s;"><img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost"><div class="mc-shadow" style="width:42%;--dur:3.6s;--d:0.9s;"></div></div>
+        <div class="mc float" style="top:48%;left:59%;--dur:4s;--d:0.5s;"><img src="assets/小鬼.png" class="pg pg-sm" style="object-fit:contain;" alt="pin-ghost"><div class="mc-shadow" style="width:38%;--dur:4s;--d:0.5s;"></div></div>
+        <div class="mc float" style="top:19%;left:60%;--dur:3.8s;--d:1s;"><img src="assets/小鬼.png" class="pg pg-xs" style="object-fit:contain;" alt="pin-ghost"><div class="mc-shadow" style="width:32%;--dur:3.8s;--d:1s;"></div></div>
+        <div class="mc" style="top:62%;left:54%;opacity:0.45;"><svg class="bn bn-sm"><use href="#bone"/></svg></div>
+        <div class="mc" style="top:66%;left:59%;opacity:0.30;"><img src="assets/骷髏.png" class="sk sk-sm" style="object-fit:contain;" alt="skull"></div>
+        <div class="mc" style="top:71%;left:36%;opacity:0.40;"><img src="assets/墓碑.png" class="rp rp-sm" style="object-fit:contain;" alt="rip"></div>
+        <div class="friend float" style="top:31%;left:55%;--dur:3.5s;--d:0.4s;"><img src="assets/小鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost-c"><div class="friend-lbl">阿星</div></div>
+        <div class="friend float" style="top:59%;left:45%;--dur:4.2s;--d:0.8s;"><img src="assets/小鬼.png" class="pg pg-xs" style="object-fit:contain;" alt="pin-ghost"><div class="friend-lbl">小雨</div></div>
+        <div class="user-pos" style="top:46%;left:43%;transform:translate(-50%,-50%);">
+          <div class="user-ring"></div><div class="user-ring user-ring2"></div>
+          <img src="assets/舉手鬼.png" class="gh gh-md float" style="--dur:2.5s;object-fit:contain;" alt="ghost">
+          <div class="user-lbl">你</div>
         </div>
-
-        <!-- danger aura zones -->
-        <div class="danger-zone" style="width:160px;height:120px;top:36%;left:28%;transform:translate(-50%,-50%);"></div>
-        <div class="danger-zone" style="width:100px;height:80px;top:58%;left:62%;transform:translate(-50%,-50%);opacity:0.7;"></div>
-
-        <!-- ghost markers – cluster 1 (danger zone) -->
-        <div class="ghost-marker" style="top:28%;left:18%;">
-          <div class="ghost-icon" style="--size:28px;--glow:rgba(240,100,120,0.7);--op:0.8;--dur:3.2s;--delay:0.2s;">👻</div>
+        <div class="map-top">
+          <div class="search-bar"><img src="assets/小鬼.png" class="pg pg-xs" style="opacity:0.6;object-fit:contain;" alt="pin-ghost">搜尋地點</div>
+          <div class="sq-btn">≡</div>
         </div>
-        <div class="ghost-marker" style="top:32%;left:26%;">
-          <div class="ghost-icon" style="--size:22px;--glow:rgba(240,100,120,0.6);--op:0.7;--dur:2.8s;--delay:0.5s;">👻</div>
+        <div class="chip" style="top:116px;left:20px;display:flex;align-items:center;gap:8px;">
+          <div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.5);animation:breathe 2s ease-in-out infinite;flex-shrink:0;"></div>
+          <span style="font-size:11px;color:var(--t2);">2 位朋友在線</span>
         </div>
-        <div class="ghost-marker" style="top:40%;left:22%;">
-          <div class="ghost-icon" style="--size:18px;--glow:rgba(180,80,100,0.5);--op:0.6;--dur:3.5s;--delay:0.8s;">👻</div>
-        </div>
-        <div class="ghost-marker" style="top:36%;left:32%;">
-          <div class="ghost-icon" style="--size:24px;--glow:rgba(200,80,120,0.6);--op:0.75;--dur:3s;--delay:0.1s;">👻</div>
-        </div>
-
-        <!-- ghost markers – scattered -->
-        <div class="ghost-marker" style="top:50%;left:56%;">
-          <div class="ghost-icon" style="--size:20px;--glow:rgba(139,159,255,0.5);--op:0.6;--dur:4s;--delay:1s;">👻</div>
-        </div>
-        <div class="ghost-marker" style="top:60%;left:64%;">
-          <div class="ghost-icon" style="--size:16px;--glow:rgba(180,60,100,0.5);--op:0.55;--dur:3.8s;--delay:0.4s;">👻</div>
-        </div>
-        <div class="ghost-marker" style="top:22%;left:62%;">
-          <div class="ghost-icon" style="--size:14px;--glow:rgba(139,159,255,0.4);--op:0.5;--dur:4.2s;--delay:0.9s;">👻</div>
-        </div>
-        <div class="ghost-marker" style="top:70%;left:42%;">
-          <div class="ghost-icon" style="--size:16px;--glow:rgba(167,139,250,0.5);--op:0.55;--dur:3.6s;--delay:0.3s;">👻</div>
-        </div>
-
-        <!-- user ghost -->
-        <div class="user-ghost" style="position:absolute;top:48%;left:48%;transform:translate(-50%,-50%);">
-          <div class="user-ghost-icon">👻</div>
-          <div class="user-dot"></div>
-        </div>
-
-        <!-- top bar -->
-        <div class="map-top-bar">
-          <div class="search-pill">
-            <span>🔍</span>
-            <span>搜尋地點...</span>
-          </div>
-          <div class="icon-btn">🔔</div>
-        </div>
-
-        <!-- ghost count card -->
-        <div class="ghost-count">
-          <div class="num">47</div>
-          <div class="lbl">附近幽靈</div>
-        </div>
-
-        <!-- FAB -->
-        <div class="map-fab">👻</div>
-
-        <!-- bottom nav -->
-        <div class="bottom-nav">
-          <div class="nav-item active">
-            <span class="nav-icon">🗺️</span>
-            <span class="nav-label">地圖</span>
-          </div>
-          <div class="nav-item">
-            <span class="nav-icon">➕</span>
-            <span class="nav-label">留下</span>
-          </div>
-          <div class="nav-item">
-            <span class="nav-icon">👥</span>
-            <span class="nav-label">社群</span>
-          </div>
-          <div class="nav-item">
-            <span class="nav-icon">🌙</span>
-            <span class="nav-label">我的</span>
-          </div>
+        <div class="chip" style="top:116px;right:20px;text-align:center;"><div class="chip-num">47</div><div class="chip-lbl">附近幽靈</div></div>
+        <div class="fab"><img src="assets/舉手鬼.png" class="gh gh-md floatF" style="--dur:3s;object-fit:contain;" alt="ghost"></div>
+        <div class="bnav">
+          <div class="ni on"><img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost"><span class="nlbl">地圖</span></div>
+          <div class="ni"><img src="assets/小鬼.png" class="pg pg-xs" style="object-fit:contain;" alt="pin-ghost"><span class="nlbl">留下</span></div>
+          <div class="ni"><img src="assets/骷髏.png" class="sk sk-sm" style="object-fit:contain;" alt="skull"><span class="nlbl">社群</span></div>
+          <div class="ni"><img src="assets/墓碑.png" class="rp rp-sm" style="object-fit:contain;" alt="rip"><span class="nlbl">我的</span></div>
         </div>
       </div>
     </div>
-    <div class="phone-label">主畫面 · 地圖</div>
+    <div class="phone-label">Map</div>
+    <div class="phone-note">CartoDB 暗色真實地圖 + 手繪幽靈情緒層</div>
   </div>
 
-  <!-- ── PHONE 2: DROP GHOST ── -->
+  <!-- DROP -->
   <div class="phone-wrap">
     <div class="phone">
-      <div class="status-bar">
-        <span class="time">9:41</span>
-        <div class="status-icons">
-          <span>●●●</span>
-          <span>WiFi</span>
-          <span>🔋</span>
-        </div>
-      </div>
-
+      <div class="status-bar"><span class="time">9:41</span><span>●●● WiFi 🔋</span></div>
       <div class="screen-drop">
-        <div class="drop-bg"></div>
-
-        <!-- sheet handle -->
-        <div class="drop-handle"></div>
-
-        <!-- header -->
-        <div class="drop-header">
-          <h2>留下一個 Ghost</h2>
-          <p>記錄你在這裡的感受，匿名且安全</p>
+        <div class="handle"></div>
+        <div class="drop-hdr"><h2>留下幽靈</h2><p>匿名 · 安全 · 被記住</p></div>
+        <div class="drop-hero">
+          <img src="assets/舉手鬼.png" class="gh gh-hero float" style="--dur:2.8s;object-fit:contain;" alt="ghost">
+          <div class="drop-hero-lbl">放在這裡</div>
         </div>
-
-        <!-- ghost preview -->
-        <div class="drop-ghost-preview">
-          <div class="drop-ghost-anim">👻</div>
-        </div>
-
-        <!-- content -->
-        <div class="drop-content">
-
-          <!-- type selector -->
+        <div class="drop-body">
           <div>
-            <div class="drop-section-title">Ghost 類型</div>
+            <div class="field-lbl">情緒類型</div>
             <div class="type-grid">
-              <div class="type-chip selected">
-                <span class="icon">😰</span>
-                <span class="name">不安</span>
-              </div>
-              <div class="type-chip">
-                <span class="icon">⚠️</span>
-                <span class="name">危險</span>
-              </div>
-              <div class="type-chip">
-                <span class="icon">😔</span>
-                <span class="name">低落</span>
-              </div>
-              <div class="type-chip">
-                <span class="icon">😡</span>
-                <span class="name">憤怒</span>
-              </div>
-              <div class="type-chip">
-                <span class="icon">👁️</span>
-                <span class="name">監視</span>
-              </div>
+              <div class="type-chip sel"><img src="assets/舉手鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost"><span class="tc-lbl">不安</span></div>
+              <div class="type-chip"><img src="assets/小鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost-c"><span class="tc-lbl">危險</span></div>
+              <div class="type-chip"><img src="assets/骷髏.png" class="sk sk-md" style="object-fit:contain;" alt="skull"><span class="tc-lbl">低落</span></div>
+              <div class="type-chip"><img src="assets/走路鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost-b"><span class="tc-lbl">疲憊</span></div>
+              <div class="type-chip"><img src="assets/小鬼.png" class="pg pg-sm" style="object-fit:contain;" alt="pin-ghost"><span class="tc-lbl">監視</span></div>
             </div>
           </div>
-
-          <!-- text input -->
           <div>
-            <div class="drop-section-title">說說發生了什麼</div>
-            <div class="text-input-area">
-              <span class="placeholder">在這裡發生了什麼讓你不舒服的事？你的感受很重要…</span>
-            </div>
+            <div class="field-lbl">發生了什麼</div>
+            <textarea class="textarea" placeholder="在這裡說出來，沒有人知道是你..."></textarea>
+            <div class="char-count">0 / 200</div>
           </div>
-
-          <!-- severity -->
           <div>
-            <div class="drop-section-title">嚴重程度</div>
-            <div class="severity-track">
-              <div class="severity-fill"></div>
-              <div class="severity-thumb"></div>
-            </div>
-            <div class="severity-labels">
-              <span>輕微不適</span>
-              <span>中等</span>
-              <span>非常危險</span>
-            </div>
+            <div class="field-lbl">嚴重程度</div>
+            <div class="sev-row"><div class="dot mid"></div><div class="dot mid"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div><span class="sev-lbl">中等</span></div>
           </div>
-
-          <!-- anonymous toggle -->
           <div class="toggle-row">
-            <div class="toggle-left">
-              <span class="icon">👤</span>
-              <div class="toggle-info">
-                <h4>匿名發佈</h4>
-                <p>其他使用者看不到你的身分</p>
-              </div>
-            </div>
-            <div class="toggle-pill"></div>
+            <div class="tl"><img src="assets/舉手鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost"><div class="ti-info"><h4>匿名發佈</h4><p>沒有人知道是你</p></div></div>
+            <div class="toggle"></div>
           </div>
-
-          <!-- CTA -->
-          <div class="drop-cta">
-            <span>👻</span>
-            <span>留下 Ghost</span>
-          </div>
-
-        </div><!-- /drop-content -->
-
-        <!-- bottom nav -->
-        <div class="bottom-nav" style="position:relative;bottom:auto;left:auto;right:auto;margin:0 20px 20px;flex-shrink:0;">
-          <div class="nav-item">
-            <span class="nav-icon">🗺️</span>
-            <span class="nav-label">地圖</span>
-          </div>
-          <div class="nav-item active">
-            <span class="nav-icon">➕</span>
-            <span class="nav-label">留下</span>
-          </div>
-          <div class="nav-item">
-            <span class="nav-icon">👥</span>
-            <span class="nav-label">社群</span>
-          </div>
-          <div class="nav-item">
-            <span class="nav-icon">🌙</span>
-            <span class="nav-label">我的</span>
-          </div>
+          <div class="cta">留下幽靈</div>
+        </div>
+        <div class="bnav-inline">
+          <div class="ni"><img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost"><span class="nlbl">地圖</span></div>
+          <div class="ni on"><img src="assets/小鬼.png" class="pg pg-xs" style="object-fit:contain;" alt="pin-ghost"><span class="nlbl">留下</span></div>
+          <div class="ni"><img src="assets/骷髏.png" class="sk sk-sm" style="object-fit:contain;" alt="skull"><span class="nlbl">社群</span></div>
+          <div class="ni"><img src="assets/墓碑.png" class="rp rp-sm" style="object-fit:contain;" alt="rip"><span class="nlbl">我的</span></div>
         </div>
       </div>
     </div>
-    <div class="phone-label">Drop Ghost · 發佈</div>
+    <div class="phone-label">Drop Ghost</div>
+    <div class="phone-note">匿名留下情緒標記</div>
   </div>
+</div>
 
-</div><!-- /phones-row -->
-
-<!-- ══════════════════════════════════════
-     ROW 2 — DETAIL + COMMUNITY
-══════════════════════════════════════ -->
+<!-- ════ ROW 3 — DETAIL + COMMUNITY ════ -->
+<div class="max-w"><div class="sec">04 · Location Detail  ·  05 · Community</div></div>
 <div class="phones-row">
 
-  <!-- ── PHONE 3: LOCATION DETAIL ── -->
+  <!-- LOCATION DETAIL -->
   <div class="phone-wrap">
     <div class="phone">
-      <div class="status-bar">
-        <span class="time">9:41</span>
-        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
-      </div>
-
       <div class="screen-detail">
-        <div class="detail-bg"></div>
-
-        <div class="detail-header">
-          <div class="detail-back">←</div>
-          <div class="detail-location">📍 台北市中山區</div>
-          <div class="detail-name">某停車場<br>地下通道</div>
-
-          <!-- stats -->
-          <div class="detail-stats">
-            <div class="stat-card">
-              <div class="stat-num danger">23</div>
-              <div class="stat-label">👻 幽靈數量</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-num blue">47</div>
-              <div class="stat-label">👁️ 目擊次數</div>
-            </div>
+        <div class="detail-map">
+          <div id="dmap"></div>
+          <div class="detail-map-overlay"></div>
+          <div class="detail-hdr">
+            <div class="back-btn">‹ 返回</div>
+            <div class="type-badge">不安</div>
+          </div>
+          <div class="detail-ghost">
+            <img src="assets/舉手鬼.png" class="gh gh-lg float" style="--dur:3s;object-fit:contain;" alt="ghost">
           </div>
         </div>
-
-        <!-- danger meter -->
-        <div class="danger-meter">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-size:12px;font-weight:600;">危險程度</span>
-            <span style="font-size:12px;color:rgba(240,140,120,0.8);font-weight:600;">中高危</span>
+        <div class="detail-body">
+          <div class="detail-text">「今天在國父紀念館附近感覺很不安，有人一直盯著我看，走來走去，讓我沒辦法專心...」</div>
+          <div class="detail-meta">
+            <div class="meta-row">
+              <img src="assets/小鬼.png" class="pg pg-xs" style="opacity:0.5;object-fit:contain;" alt="pin-ghost">
+              <span>國父紀念館 · 台北市</span>
+              <div class="meta-dot"></div>
+              <span>10分前</span>
+            </div>
+            <div class="meta-row">
+              <span style="color:var(--t3);letter-spacing:0.5px;">嚴重程度</span>
+              <div class="sev-row-inline">
+                <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+              </div>
+            </div>
           </div>
-          <div class="danger-bar-bg">
-            <div class="danger-bar-fill"></div>
+          <div class="detail-divider"></div>
+          <div class="reaction-row">
+            <div class="reaction-btn active">
+              <img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost">
+              共鳴 · 44
+            </div>
+            <div class="reaction-btn">
+              <svg class="bn bn-xs"><use href="#bone"/></svg>
+              同感 · 12
+            </div>
           </div>
-          <div class="danger-meta">
-            <span>最近回報：2小時前</span>
-            <span class="level">65 / 100</span>
+          <div class="detail-divider"></div>
+          <div class="nearby-label">附近的幽靈</div>
+          <div class="nearby-scroll">
+            <div class="nearby-item"><img src="assets/走路鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost-b"><div class="nearby-dist">38m</div></div>
+            <div class="nearby-item"><img src="assets/舉手鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost"><div class="nearby-dist">65m</div></div>
+            <div class="nearby-item"><img src="assets/小鬼.png" class="pg pg-sm" style="object-fit:contain;" alt="pin-ghost"><div class="nearby-dist">82m</div></div>
+            <div class="nearby-item" style="opacity:0.4;"><svg class="bn bn-sm"><use href="#bone"/></svg><div class="nearby-dist">110m</div></div>
+            <div class="nearby-item" style="opacity:0.3;"><img src="assets/骷髏.png" class="sk sk-sm" style="object-fit:contain;" alt="skull"><div class="nearby-dist">200m</div></div>
           </div>
+          <div class="cta" style="margin-top:4px;">在這裡留下幽靈</div>
         </div>
-
-        <!-- reports -->
-        <div class="reports-list">
-          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:4px;">經驗回報</div>
-
-          <div class="report-card">
-            <div class="report-top">
-              <div class="report-type">
-                <span class="report-type-icon">😰</span>
-                <span class="report-type-name">不安感</span>
-              </div>
-              <div class="report-badge badge-danger">高</div>
-            </div>
-            <div class="report-text">深夜走過這裡感覺有人跟著，燈光很暗，建議避開</div>
-            <div class="report-footer">
-              <span class="report-time">2小時前 · 匿名</span>
-              <div class="report-reactions">
-                <span>👻12</span>
-                <span>💙8</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="report-card">
-            <div class="report-top">
-              <div class="report-type">
-                <span class="report-type-icon">⚠️</span>
-                <span class="report-type-name">危險狀況</span>
-              </div>
-              <div class="report-badge badge-medium">中</div>
-            </div>
-            <div class="report-text">監視器有死角，曾遇到陌生人靠近</div>
-            <div class="report-footer">
-              <span class="report-time">昨天 · 匿名</span>
-              <div class="report-reactions">
-                <span>👻7</span>
-                <span>💙4</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="report-card">
-            <div class="report-top">
-              <div class="report-type">
-                <span class="report-type-icon">😔</span>
-                <span class="report-type-name">情緒低落</span>
-              </div>
-              <div class="report-badge badge-low">低</div>
-            </div>
-            <div class="report-text">這裡很陰暗，每次走過心情就變得很差</div>
-            <div class="report-footer">
-              <span class="report-time">3天前 · 匿名</span>
-              <div class="report-reactions">
-                <span>👻15</span>
-                <span>💙11</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="report-card">
-            <div class="report-top">
-              <div class="report-type">
-                <span class="report-type-icon">👁️</span>
-                <span class="report-type-name">被監視感</span>
-              </div>
-              <div class="report-badge badge-medium">中</div>
-            </div>
-            <div class="report-text">不舒服的眼神，停了很久</div>
-            <div class="report-footer">
-              <span class="report-time">上週 · 匿名</span>
-              <div class="report-reactions">
-                <span>👻9</span>
-                <span>💙6</span>
-              </div>
-            </div>
-          </div>
-
-        </div><!-- /reports-list -->
+        <div class="bnav">
+          <div class="ni"><img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost"><span class="nlbl">地圖</span></div>
+          <div class="ni"><img src="assets/小鬼.png" class="pg pg-xs" style="object-fit:contain;" alt="pin-ghost"><span class="nlbl">留下</span></div>
+          <div class="ni"><img src="assets/骷髏.png" class="sk sk-sm" style="object-fit:contain;" alt="skull"><span class="nlbl">社群</span></div>
+          <div class="ni"><img src="assets/墓碑.png" class="rp rp-sm" style="object-fit:contain;" alt="rip"><span class="nlbl">我的</span></div>
+        </div>
       </div>
     </div>
-    <div class="phone-label">地點詳細頁</div>
+    <div class="phone-label">Location Detail</div>
+    <div class="phone-note">點擊地圖上的幽靈後進入</div>
   </div>
 
-  <!-- ── PHONE 4: COMMUNITY ── -->
+  <!-- COMMUNITY -->
   <div class="phone-wrap">
     <div class="phone">
-      <div class="status-bar">
-        <span class="time">9:41</span>
-        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
-      </div>
-
-      <div class="screen-community">
-        <div class="community-bg"></div>
-
-        <div class="community-header">
-          <h2>情緒空間</h2>
-          <p>所有 ghost 都被聽見</p>
+      <div class="status-bar"><span class="time">9:41</span><span>●●● WiFi 🔋</span></div>
+      <div class="screen-comm">
+        <div class="comm-hdr"><h2>情緒空間</h2><div class="comm-jp">すべての感情は、ここに残る</div></div>
+        <div class="tabs">
+          <div class="tab on">全部</div><div class="tab">低落</div><div class="tab">疲憊</div><div class="tab">憤怒</div><div class="tab">空洞</div>
         </div>
-
-        <!-- mood filter -->
-        <div class="mood-chips">
-          <div class="mood-chip active">✨ 全部</div>
-          <div class="mood-chip">😰 不安</div>
-          <div class="mood-chip">😔 低落</div>
-          <div class="mood-chip">⚠️ 危險</div>
-          <div class="mood-chip">😡 憤怒</div>
-          <div class="mood-chip">💙 共鳴</div>
+        <div class="feed">
+          <div class="post">
+            <div class="post-top"><div class="post-user"><img src="assets/舉手鬼.png" class="gh gh-md float" style="--dur:3s;--d:0s;object-fit:contain;" alt="ghost"><div><div class="post-name">煙霧形態_07</div><div class="post-loc">情緒碎片 · 無地點</div></div></div><div class="post-time">8分前</div></div>
+            <div class="post-text">有時候覺得自己像地圖上那些慢慢消失的 ghost。明明留過痕跡，但沒人看見，然後就變成一堆骨頭。</div>
+            <div class="post-tag">空洞</div>
+            <div class="post-btm"><div class="reacts"><div class="react"><img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost"> 44</div><div class="react"><svg class="bn bn-xs"><use href="#bone"/></svg> 31</div></div><span style="font-size:10px;color:var(--t3);">回應</span></div>
+          </div>
+          <div class="post">
+            <div class="post-top"><div class="post-user"><img src="assets/小鬼.png" class="gh gh-md float" style="--dur:3.5s;--d:0.4s;object-fit:contain;" alt="ghost-c"><div><div class="post-name">暗月碎片</div><div class="post-loc">情緒碎片 · 無地點</div></div></div><div class="post-time">42分前</div></div>
+            <div class="post-text">憤怒是一種很奇怪的情緒，讓你覺得有力量，但其實你只是在燃燒自己。</div>
+            <div class="post-tag">憤怒</div>
+            <div class="post-btm"><div class="reacts"><div class="react"><img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost"> 67</div><div class="react"><img src="assets/小鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost-c"> 38</div></div><span style="font-size:10px;color:var(--t3);">回應</span></div>
+          </div>
+          <div class="post">
+            <div class="post-top"><div class="post-user"><img src="assets/走路鬼.png" class="gh gh-md float" style="--dur:4s;--d:0.8s;object-fit:contain;" alt="ghost-b"><div><div class="post-name">輕霧殘像</div><div class="post-loc">情緒碎片 · 無地點</div></div></div><div class="post-time">2小時前</div></div>
+            <div class="post-text">沒有什麼特別的事，只是覺得很累了。不是身體，是那種一直需要解釋自己的累。</div>
+            <div class="post-tag">疲憊</div>
+            <div class="post-btm"><div class="reacts"><div class="react"><img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost"> 112</div><div class="react"><img src="assets/骷髏.png" class="sk sk-sm" style="object-fit:contain;" alt="skull"> 89</div></div><span style="font-size:10px;color:var(--t3);">回應</span></div>
+          </div>
+          <div class="post">
+            <div class="post-top"><div class="post-user"><img src="assets/墓碑.png" class="rp rp-md float" style="--dur:3.2s;--d:0.2s;object-fit:contain;" alt="rip"><div><div class="post-name">藍色煙霧</div><div class="post-loc">情緒碎片 · 無地點</div></div></div><div class="post-time">5小時前</div></div>
+            <div class="post-text">看到地圖上這裡有很多 ghost，才意識到不是只有我這樣覺得。謝謝所有留下記錄的人。</div>
+            <div class="post-tag">共鳴</div>
+            <div class="post-btm"><div class="reacts"><div class="react"><img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost"> 89</div><div class="react"><img src="assets/小鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost-c"> 52</div></div><span style="font-size:10px;color:var(--t3);">回應</span></div>
+          </div>
         </div>
-
-        <!-- feed -->
-        <div class="community-feed">
-
-          <div class="feed-card">
-            <div class="feed-card-top">
-              <div class="feed-user">
-                <div class="feed-avatar avatar-purple">👻</div>
-                <div class="feed-user-info">
-                  <div class="name">幽靈_月光</div>
-                  <div class="location">📍 台北 · 信義區</div>
-                </div>
-              </div>
-              <div class="feed-time">10分前</div>
-            </div>
-            <div class="feed-text">走在那條路上的感覺說不清楚，但身體比腦袋先知道了。明明是白天卻覺得很不安全。</div>
-            <span class="feed-tag" style="background:rgba(200,80,100,0.15);color:rgba(240,120,120,0.8);border:1px solid rgba(200,80,100,0.2);">😰 不安</span>
-            <span class="feed-tag" style="background:rgba(139,159,255,0.1);color:rgba(139,159,255,0.8);border:1px solid rgba(139,159,255,0.2);">📍 地點回報</span>
-            <div class="feed-bottom">
-              <div class="feed-reactions">
-                <div class="feed-reaction"><span class="emoji">👻</span> 34</div>
-                <div class="feed-reaction"><span class="emoji">💙</span> 18</div>
-                <div class="feed-reaction"><span class="emoji">🤍</span> 7</div>
-              </div>
-              <span style="font-size:11px;color:var(--text3);">回應</span>
-            </div>
-          </div>
-
-          <div class="feed-card">
-            <div class="feed-card-top">
-              <div class="feed-user">
-                <div class="feed-avatar avatar-blue">👻</div>
-                <div class="feed-user-info">
-                  <div class="name">藍色煙霧</div>
-                  <div class="location">📍 台中 · 西區</div>
-                </div>
-              </div>
-              <div class="feed-time">1小時前</div>
-            </div>
-            <div class="feed-text">看到地圖上這裡有很多 ghost，才意識到不是只有我這樣覺得。謝謝所有留下記錄的人。</div>
-            <span class="feed-tag" style="background:rgba(167,139,250,0.12);color:rgba(167,139,250,0.8);border:1px solid rgba(167,139,250,0.2);">💜 共鳴</span>
-            <div class="feed-bottom">
-              <div class="feed-reactions">
-                <div class="feed-reaction"><span class="emoji">👻</span> 89</div>
-                <div class="feed-reaction"><span class="emoji">💙</span> 52</div>
-                <div class="feed-reaction"><span class="emoji">🤍</span> 23</div>
-              </div>
-              <span style="font-size:11px;color:var(--text3);">回應</span>
-            </div>
-          </div>
-
-          <div class="feed-card">
-            <div class="feed-card-top">
-              <div class="feed-user">
-                <div class="feed-avatar avatar-pink">👻</div>
-                <div class="feed-user-info">
-                  <div class="name">粉紅塵埃</div>
-                  <div class="location">📍 高雄 · 三民區</div>
-                </div>
-              </div>
-              <div class="feed-time">3小時前</div>
-            </div>
-            <div class="feed-text">某個公園到了晚上感覺完全不一樣。白天很平靜，但一到天黑就很不想一個人待。留了個 ghost。</div>
-            <span class="feed-tag" style="background:rgba(200,80,100,0.15);color:rgba(240,120,120,0.8);border:1px solid rgba(200,80,100,0.2);">😰 不安</span>
-            <div class="feed-bottom">
-              <div class="feed-reactions">
-                <div class="feed-reaction"><span class="emoji">👻</span> 41</div>
-                <div class="feed-reaction"><span class="emoji">💙</span> 29</div>
-                <div class="feed-reaction"><span class="emoji">🤍</span> 12</div>
-              </div>
-              <span style="font-size:11px;color:var(--text3);">回應</span>
-            </div>
-          </div>
-
-        </div><!-- /feed -->
-
-        <!-- bottom nav -->
-        <div class="bottom-nav">
-          <div class="nav-item"><span class="nav-icon">🗺️</span><span class="nav-label">地圖</span></div>
-          <div class="nav-item"><span class="nav-icon">➕</span><span class="nav-label">留下</span></div>
-          <div class="nav-item active"><span class="nav-icon">👥</span><span class="nav-label">社群</span></div>
-          <div class="nav-item"><span class="nav-icon">🌙</span><span class="nav-label">我的</span></div>
+        <div class="bnav">
+          <div class="ni"><img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost"><span class="nlbl">地圖</span></div>
+          <div class="ni"><img src="assets/小鬼.png" class="pg pg-xs" style="object-fit:contain;" alt="pin-ghost"><span class="nlbl">留下</span></div>
+          <div class="ni on"><img src="assets/骷髏.png" class="sk sk-sm" style="object-fit:contain;" alt="skull"><span class="nlbl">社群</span></div>
+          <div class="ni"><img src="assets/墓碑.png" class="rp rp-sm" style="object-fit:contain;" alt="rip"><span class="nlbl">我的</span></div>
         </div>
       </div>
     </div>
-    <div class="phone-label">社群 · 情緒空間</div>
+    <div class="phone-label">Community</div>
+    <div class="phone-note">情緒貼文社群動態</div>
   </div>
+</div>
 
-</div><!-- /phones-row -->
-
-<!-- ══════════════════════════════════════
-     ROW 3 — PROFILE (centered)
-══════════════════════════════════════ -->
+<!-- ════ ROW 4 — PROFILE ════ -->
+<div class="max-w"><div class="sec">06 · Profile</div></div>
 <div class="phones-row">
-
-  <!-- ── PHONE 5: PROFILE ── -->
   <div class="phone-wrap">
     <div class="phone">
-      <div class="status-bar">
-        <span class="time">9:41</span>
-        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
-      </div>
-
+      <div class="status-bar"><span class="time">9:41</span><span>●●● WiFi 🔋</span></div>
       <div class="screen-profile">
-        <div class="profile-bg"></div>
-
-        <!-- hero -->
-        <div class="profile-hero">
-          <div class="profile-avatar-wrap">
-            <div class="profile-avatar-ring">
-              <div class="profile-avatar">👻</div>
-            </div>
-            <div class="profile-level-badge">Lv.7</div>
+        <div class="p-hero">
+          <div class="p-av-wrap">
+            <img src="assets/舉手鬼.png" class="gh gh-hero floatF" style="--dur:3s;object-fit:contain;" alt="ghost">
+            <div class="p-lv">Lv. 7</div>
           </div>
-
-          <div class="profile-name">幽靈_月光</div>
-          <div class="profile-handle">@ghostmoonlight · 加入 143天</div>
-
-          <div class="profile-xp-bar">
-            <div class="xp-label">
-              <span>Ghost Energy</span>
-              <span>680 / 1000 XP</span>
+          <div class="p-name">幽靈_月光</div>
+          <div class="p-handle">@ghostmoonlight · 143 days</div>
+          <div class="xp-wrap">
+            <div class="xp-top"><span>Ghost Energy</span><span>680 / 1000</span></div>
+            <div class="xp-track"><div class="xp-fill"></div></div>
+          </div>
+        </div>
+        <div class="p-stats">
+          <div class="pst"><div class="pst-num">34</div><div class="pst-lbl">幽靈</div></div>
+          <div class="pst"><div class="pst-num">127</div><div class="pst-lbl">共鳴</div></div>
+          <div class="pst"><div class="pst-num">8</div><div class="pst-lbl">徽章</div></div>
+          <div class="pst"><div class="pst-num">12</div><div class="pst-lbl">守護</div></div>
+        </div>
+        <div class="p-scroll">
+          <div class="p-sec">
+            <div class="p-sec-hdr"><div class="p-sec-title">Ghost 造型</div><div class="p-sec-more">全部 →</div></div>
+            <div class="skin-row">
+              <div class="skin on"><img src="assets/舉手鬼.png" class="gh gh-md floatF" style="--dur:3s;object-fit:contain;" alt="ghost"><div class="skin-name">月光幽靈</div></div>
+              <div class="skin"><img src="assets/骷髏.png" class="sk sk-md floatF" style="--dur:3.5s;--d:0.3s;object-fit:contain;" alt="skull"><div class="skin-name">骷髏行者</div></div>
+              <div class="skin"><img src="assets/小鬼.png" class="gh gh-md floatF" style="--dur:4s;--d:0.6s;object-fit:contain;" alt="ghost-c"><div class="skin-name">燃燒碎片</div></div>
+              <div class="skin off"><img src="assets/墓碑.png" class="rp rp-md" style="object-fit:contain;" alt="rip"><div class="skin-name">🔒 Lv.10</div></div>
             </div>
-            <div class="xp-track">
-              <div class="xp-fill"></div>
+          </div>
+          <div class="p-sec">
+            <div class="p-sec-hdr"><div class="p-sec-title">成就</div><div class="p-sec-more">全部 →</div></div>
+            <div class="ach-grid">
+              <div class="ach on"><img src="assets/舉手鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost"><div class="ach-name">第一個 Ghost</div></div>
+              <div class="ach on"><img src="assets/小鬼.png" class="pg pg-sm" style="object-fit:contain;" alt="pin-ghost"><div class="ach-name">探索者</div></div>
+              <div class="ach on"><img src="assets/骷髏.png" class="sk sk-sm" style="object-fit:contain;" alt="skull"><div class="ach-name">共鳴達人</div></div>
+              <div class="ach on"><img src="assets/小鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost-c"><div class="ach-name">夜行者</div></div>
+              <div class="ach"><img src="assets/墓碑.png" class="rp rp-sm" style="object-fit:contain;" alt="rip"><div class="ach-name">守護者</div></div>
+              <div class="ach"><img src="assets/舉手鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost"><div class="ach-name">超級貢獻</div></div>
+              <div class="ach"><img src="assets/走路鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost-b"><div class="ach-name">全台守護</div></div>
+              <div class="ach"><img src="assets/小鬼.png" class="gh gh-sm" style="object-fit:contain;" alt="ghost-c"><div class="ach-name">Ghost 王</div></div>
             </div>
           </div>
         </div>
-
-        <!-- stats -->
-        <div class="profile-stats">
-          <div class="pstat">
-            <div class="pstat-num">34</div>
-            <div class="pstat-label">留下的<br>Ghost</div>
-          </div>
-          <div class="pstat">
-            <div class="pstat-num">127</div>
-            <div class="pstat-label">獲得<br>共鳴</div>
-          </div>
-          <div class="pstat">
-            <div class="pstat-num">8</div>
-            <div class="pstat-label">徽章</div>
-          </div>
-          <div class="pstat">
-            <div class="pstat-num">12</div>
-            <div class="pstat-label">守護的<br>地點</div>
-          </div>
-        </div>
-
-        <!-- skins -->
-        <div class="skins-section">
-          <div class="skins-header">
-            <h3>Ghost 造型</h3>
-            <span class="skins-see-all">全部 →</span>
-          </div>
-          <div class="skins-row">
-            <div class="skin-item active">
-              <span class="skin-icon">👻</span>
-              <span class="skin-name">月光幽靈</span>
-            </div>
-            <div class="skin-item">
-              <span class="skin-icon">💜</span>
-              <span class="skin-name">紫霧精靈</span>
-            </div>
-            <div class="skin-item">
-              <span class="skin-icon">🌙</span>
-              <span class="skin-name">暗夜使者</span>
-            </div>
-            <div class="skin-item locked">
-              <span class="skin-icon">🔮</span>
-              <span class="skin-name">🔒 Lv.10</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- achievements -->
-        <div class="achievements-section">
-          <div class="ach-header">
-            <h3>成就徽章</h3>
-            <span style="font-size:12px;color:#8B9FFF;">全部 →</span>
-          </div>
-          <div class="ach-grid">
-            <div class="ach-item earned">
-              <span class="ach-icon">👻</span>
-              <span class="ach-name">第一個<br>Ghost</span>
-            </div>
-            <div class="ach-item earned">
-              <span class="ach-icon">🗺️</span>
-              <span class="ach-name">探索者</span>
-            </div>
-            <div class="ach-item earned">
-              <span class="ach-icon">💜</span>
-              <span class="ach-name">共鳴達人</span>
-            </div>
-            <div class="ach-item earned">
-              <span class="ach-icon">🌙</span>
-              <span class="ach-name">夜行者</span>
-            </div>
-            <div class="ach-item">
-              <span class="ach-icon">🔮</span>
-              <span class="ach-name">神秘術士</span>
-            </div>
-            <div class="ach-item">
-              <span class="ach-icon">⭐</span>
-              <span class="ach-name">超級貢獻</span>
-            </div>
-            <div class="ach-item">
-              <span class="ach-icon">🌐</span>
-              <span class="ach-name">全台守護</span>
-            </div>
-            <div class="ach-item">
-              <span class="ach-icon">👑</span>
-              <span class="ach-name">Ghost 王</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- bottom nav -->
-        <div class="bottom-nav">
-          <div class="nav-item"><span class="nav-icon">🗺️</span><span class="nav-label">地圖</span></div>
-          <div class="nav-item"><span class="nav-icon">➕</span><span class="nav-label">留下</span></div>
-          <div class="nav-item"><span class="nav-icon">👥</span><span class="nav-label">社群</span></div>
-          <div class="nav-item active"><span class="nav-icon">🌙</span><span class="nav-label">我的</span></div>
+        <div class="bnav">
+          <div class="ni"><img src="assets/舉手鬼.png" class="gh gh-xs" style="object-fit:contain;" alt="ghost"><span class="nlbl">地圖</span></div>
+          <div class="ni"><img src="assets/小鬼.png" class="pg pg-xs" style="object-fit:contain;" alt="pin-ghost"><span class="nlbl">留下</span></div>
+          <div class="ni"><img src="assets/骷髏.png" class="sk sk-sm" style="object-fit:contain;" alt="skull"><span class="nlbl">社群</span></div>
+          <div class="ni on"><img src="assets/墓碑.png" class="rp rp-sm" style="object-fit:contain;" alt="rip"><span class="nlbl">我的</span></div>
         </div>
       </div>
     </div>
-    <div class="phone-label">個人頁 · Profile</div>
+    <div class="phone-label">Profile</div>
+    <div class="phone-note">個人頁 · Ghost 收藏 · 成就系統</div>
   </div>
+</div>
 
-</div><!-- /phones-row -->
-
-<!-- ══════════════════════════════════════
-     DESIGN TOKENS
-══════════════════════════════════════ -->
+<!-- ════ DESIGN SYSTEM ════ -->
 <div class="divider"></div>
 <div class="max-w">
-  <div class="section-label" style="margin-bottom:32px;">Design Tokens · 設計系統</div>
-
-  <div class="tokens-section">
-    <div style="margin-bottom:24px;">
-      <div class="section-label" style="margin-bottom:16px;">Color Palette</div>
-      <div class="tokens-grid">
-        <div class="token-swatch">
-          <div class="swatch-color" style="background:#0B0B0F;border-bottom:1px solid rgba(255,255,255,0.06);"></div>
-          <div class="swatch-info"><div class="swatch-name">Background</div><div class="swatch-hex">#0B0B0F</div></div>
-        </div>
-        <div class="token-swatch">
-          <div class="swatch-color" style="background:rgba(255,255,255,0.05);"></div>
-          <div class="swatch-info"><div class="swatch-name">Surface</div><div class="swatch-hex">rgba(255,255,255,0.05)</div></div>
-        </div>
-        <div class="token-swatch">
-          <div class="swatch-color" style="background:#8B9FFF;"></div>
-          <div class="swatch-info"><div class="swatch-name">Blue Glow</div><div class="swatch-hex">#8B9FFF</div></div>
-        </div>
-        <div class="token-swatch">
-          <div class="swatch-color" style="background:#A78BFA;"></div>
-          <div class="swatch-info"><div class="swatch-name">Purple</div><div class="swatch-hex">#A78BFA</div></div>
-        </div>
-        <div class="token-swatch">
-          <div class="swatch-color" style="background:#F472B6;"></div>
-          <div class="swatch-info"><div class="swatch-name">Pink Accent</div><div class="swatch-hex">#F472B6</div></div>
-        </div>
-        <div class="token-swatch">
-          <div class="swatch-color" style="background:rgba(180,60,80,0.7);"></div>
-          <div class="swatch-info"><div class="swatch-name">Danger</div><div class="swatch-hex">rgba(180,60,80,0.7)</div></div>
-        </div>
-      </div>
+  <div class="ds-panel">
+    <h3>Icon System · 角色說明</h3>
+    <div class="char-legend">
+      <div class="cl-item"><img src="assets/舉手鬼.png" class="gh gh-lg float" style="--dur:3s;object-fit:contain;" alt="ghost"><div class="cl-name">ghost<br>幽靈 A<br>中性 / 不安</div></div>
+      <div class="cl-item"><img src="assets/走路鬼.png" class="gh gh-lg float" style="--dur:3.5s;--d:0.3s;object-fit:contain;" alt="ghost-b"><div class="cl-name">ghost-b<br>幽靈 B<br>疲倦 / 低落</div></div>
+      <div class="cl-item"><img src="assets/小鬼.png" class="gh gh-lg float" style="--dur:3.2s;--d:0.6s;object-fit:contain;" alt="ghost-c"><div class="cl-name">ghost-c<br>幽靈 C<br>憤怒 / 危險</div></div>
+      <div class="cl-item"><img src="assets/小鬼.png" class="pg pg-lg float" style="--dur:4s;--d:0.4s;object-fit:contain;" alt="pin-ghost"><div class="cl-name">pin-ghost<br>Pin 幽靈<br>地點標記</div></div>
+      <div class="cl-item"><img src="assets/骷髏.png" class="sk" style="width:44px;height:46px;display:inline-block;filter:url(#rough);object-fit:contain;" alt="skull"><div class="cl-name">skull<br>骷髏<br>衰退 / 舊標記</div></div>
+      <div class="cl-item"><svg class="bn" style="width:48px;height:30px;display:inline-block;filter:url(#rough);"><use href="#bone"/></svg><div class="cl-name">bone<br>骨頭<br>反應 / 消逝</div></div>
+      <div class="cl-item"><img src="assets/墓碑.png" class="rp rp-lg" style="object-fit:contain;" alt="rip"><div class="cl-name">rip<br>RIP 墓碑<br>歷史 / 個人頁</div></div>
     </div>
 
-    <div>
-      <div class="section-label" style="margin-bottom:16px;">Typography Scale</div>
-      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:20px;">
-        <div>
-          <div class="section-label" style="margin-bottom:6px;">Display · 32px / 700</div>
-          <div style="font-size:32px;font-weight:700;letter-spacing:-1px;background:linear-gradient(135deg,#8B9FFF,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">這個世界會記住你的情緒</div>
-        </div>
-        <div>
-          <div class="section-label" style="margin-bottom:6px;">Headline · 24px / 700</div>
-          <div style="font-size:24px;font-weight:700;letter-spacing:-0.5px;">留下一個 Ghost</div>
-        </div>
-        <div>
-          <div class="section-label" style="margin-bottom:6px;">Body · 14px / 400</div>
-          <div style="font-size:14px;line-height:1.6;color:rgba(255,255,255,0.6);">記錄你在這裡的感受，匿名且安全。每一個 ghost 都象徵一小塊被留下的情緒記憶碎片。</div>
-        </div>
-        <div>
-          <div class="section-label" style="margin-bottom:6px;">Label · 11px / 600 / +1.5px tracking</div>
-          <div style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Ghost 類型 · SEVERITY · LOCATION</div>
-        </div>
-      </div>
+    <h3 style="margin-bottom:20px;">Color Tokens</h3>
+    <div class="sw-row">
+      <div class="sw"><div class="sw-c" style="background:#0A0A0A;border-bottom:1px solid rgba(255,255,255,0.04);"></div><div class="sw-info"><div class="sw-name">--bg</div><div class="sw-hex">#0A0A0A</div></div></div>
+      <div class="sw"><div class="sw-c" style="background:#070709;"></div><div class="sw-info"><div class="sw-name">--bg-deep</div><div class="sw-hex">#070709</div></div></div>
+      <div class="sw"><div class="sw-c" style="background:rgba(255,255,255,0.9);"></div><div class="sw-info"><div class="sw-name">--t1</div><div class="sw-hex">white 90%</div></div></div>
+      <div class="sw"><div class="sw-c" style="background:rgba(255,255,255,0.45);"></div><div class="sw-info"><div class="sw-name">--t2</div><div class="sw-hex">white 45%</div></div></div>
+      <div class="sw"><div class="sw-c" style="background:rgba(255,255,255,0.22);"></div><div class="sw-info"><div class="sw-name">--t3</div><div class="sw-hex">white 22%</div></div></div>
+      <div class="sw"><div class="sw-c" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.05);"></div><div class="sw-info"><div class="sw-name">--line</div><div class="sw-hex">white 7%</div></div></div>
+      <div class="sw"><div class="sw-c" style="background:rgba(210,225,255,0.12);"></div><div class="sw-info"><div class="sw-name">--ghost-blue</div><div class="sw-hex">水彩情緒層</div></div></div>
+    </div>
+
+    <h3 style="margin-bottom:20px;">Typography</h3>
+    <div class="typo">
+      <div><div class="ty-lbl">Display — Noto Sans JP 300 · 40px · tracking 14px</div><div style="font-size:40px;font-weight:300;letter-spacing:14px;color:rgba(255,255,255,0.85);">BOOMAP</div></div>
+      <div><div class="ty-lbl">Heading — 300 · 22px · tracking 2px</div><div style="font-size:22px;font-weight:300;letter-spacing:2px;">留下幽靈</div></div>
+      <div><div class="ty-lbl">Body — 300 · 13px · line-height 1.8</div><div style="font-size:13px;font-weight:300;line-height:1.8;color:rgba(255,255,255,0.45);">有時候覺得自己像地圖上那些慢慢消失的 ghost。明明留過痕跡，但沒人看見。</div></div>
+      <div><div class="ty-lbl">Accent — Noto Serif JP 300 · italic · tracking 2px</div><div style="font-family:'Noto Serif JP';font-size:13px;font-weight:300;letter-spacing:2px;color:rgba(255,255,255,0.28);font-style:italic;">すべての感情は、ここに残る</div></div>
+      <div><div class="ty-lbl">Label — 300 · 10px · uppercase · tracking 3px</div><div style="font-size:10px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.22);">GHOST MARKER · SECTION</div></div>
     </div>
   </div>
 </div>
 
+<script>
+// ── MAP SCREEN ──
+var lmap = L.map('lmap', {
+  center: [25.0478, 121.5319],
+  zoom: 16,
+  zoomControl: false,
+  attributionControl: false,
+  scrollWheelZoom: false,
+  doubleClickZoom: false
+});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  subdomains: 'abcd', maxZoom: 20
+}).addTo(lmap);
+
+// ── DETAIL SCREEN MAP STRIP ──
+var dmap = L.map('dmap', {
+  center: [25.0404, 121.5681],
+  zoom: 17,
+  zoomControl: false,
+  attributionControl: false,
+  dragging: false,
+  scrollWheelZoom: false,
+  doubleClickZoom: false,
+  touchZoom: false
+});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  subdomains: 'abcd', maxZoom: 20
+}).addTo(dmap);
+</script>
 </body>
 </html>
